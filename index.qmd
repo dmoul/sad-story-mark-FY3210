@@ -1,0 +1,55 @@
+# Introduction {.unnumbered}
+
+```{r}
+#| label: setup
+#| include: false
+
+source(here::here("scripts/setup-libraries.R"))
+source(here("scripts/setup-data-prep.R"))
+
+```
+
+::: {.callout-note}
+This document is in draft.
+:::
+
+Where am I exactly on the earth? This is not a new question--or an easy one to answer accurately. For close to 300 years surveyors have been crisscrossing the North American lands that Europeans have settled on. Where there is Western civilization there is ownership. And where there is ownership, there are borders and governments with a geographically-defined jurisdiction.
+
+The most famous American surveyor is George Washington, in his early years surveying parts of the western frontier of Virginia (now Culpeper, Frederick and Hampshire Counties). He surveyed the town of Alexandria, Virginia (near modern-day Washington D.C., which was founded and named in his honor many decades later). He sketched a map of his travels in what is now Western Pennsylvania during the French and Indian War^[Washington as Public Land Surveyor <https://www.loc.gov/collections/george-washington-papers/articles-and-essays/george-washington-survey-and-mapmaker/washington-as-public-land-surveyor/> ] which was published with his journal of that trip.^[The Journal of Major George Washington (1754). George Washington. 1754. DigitalCommons@University of Nebraska - Lincoln. Libraries at University of Nebraska-Lincoln
+Electronic Texts in American Studies. <https://digitalcommons.unl.edu/etas/33/> ] 
+
+```{r}
+#| label: fig-washington-journal
+#| fig-cap: "Title page of the Journal of Major George Washington, 1754"
+#| out-width: "60%"
+  
+knitr::include_graphics(here("images/journal-of-g-washington-1754.jpg"))
+
+```
+
+<br>
+
+```{r}
+#| label: fig-washington-journal-map
+#| fig-cap: "Map included in the London edition of the Journal of Major George Washington, 1754, based on a sketch by the author . 'Fort Pitt' is the location of present-day Pittsburgh, Pennsylvania."
+#| out-width: "80%"
+  
+knitr::include_graphics(here("images/Detail-from-Jefferson-map-300dpi.png"))
+
+#knitr::include_graphics(here("images/journal-of-g-washington-1754.jpg"))
+
+```
+
+<br>
+
+## Survey marks
+
+After a surveying crew working as agents for the National Geodetic Survey (NGS) put in lot of work to find an accurate location, they place a mark to indicate the location and record the details in the NGS database. This makes it much less effort and expense to find an accurate location there or nearby in the future. Today the NGS manages the U.S. National Spatial Reference System, which includes more than 1.5 million survey points.
+
+> Each of these survey marks provides one or more types of very accurate survey data. This data may include: latitude, longitude, elevation, magnetic, and gravity values....Surveyors, engineers, planners, mappers, and scientists use these survey marks to give their work accurate geographical reference and connection to the national survey network, called the National Spatial Reference System (NSRS). Because the NSRS provides the fundamental positional framework for the nation’s buildings, roads, utilities, and boundaries, we all ultimately benefit from their proper use.^[BOTTLES, POTS, & PANS? – MARKING THE SURVEYS OF THE U.S. COAST & GEODETIC SURVEY AND NOAA. CDR George E. Leigh, NOAA Corps (Ret’d.). Published June 2018. Page 40. <https://www.ngs.noaa.gov/wp-content/uploads/2018/06/Survey_Mark_Art-2.pdf> ]
+
+Marks are designed to last, however their accuracy (and existence) over time is not assured. 
+
+Thus the sad story of mark FY3210.
+
+<br>

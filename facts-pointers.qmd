@@ -1,0 +1,301 @@
+# Facts and pointers
+
+```{r}
+#| label: setup
+#| include: false
+
+source(here::here("scripts/setup-libraries.R"))
+source(here("scripts/setup-data-prep.R"))
+
+```
+
+## Notes
+
+If you wish to learn more about geodesy see the links below and in the footnotes.
+
+-   "Introduction to Geodetic Survey Markers, and the NGS / USPS Recovery Program" by Stf/C Greg Shay. It's part 1 in a "Joy of Geodetics" series.[^facts-pointers-1]
+
+-   About the science of geodesy: [NGS website](http://www.ngs.noaa.gov/), especially the [Training and Education](https://geodesy.noaa.gov/INFO/training-education.shtml) section.
+
+[^facts-pointers-1]: Part I: Introduction to Geodetic Survey Markers, and the NGS / USPS Recovery Program by Stf/C Greg Shay, JN-ACN. United States Power Squadrons / America’s Boating Club. Sponsor: USPS Cooperative Charting Committee. Revision 5 - 2020. <https://www.usps.org/images/Exec/CoopCh/PDFs/2020_JOG_Part_1_I.pdf>
+
+I'm grateful to many organizations and individuals who made this possible. See @sec-acknowledgements.
+
+## Summary observations
+
+This document looks at marks in the four counties around Research Triangle Park North Carolina in which most triangle residents live: Wake, Durham, Orange, and Chatham. The NGS database includes `r comma(n_marks_counties)` marks in these counties going back to the 1850s.
+
+Most marks are located near roads (@fig-counties-osm) rather than being placed due to a geographical feature.
+
+Most common are marks determining horizontal location: Transverse Station Disks (formerly Horizontal Control Disks), Reference Marks, and Boundary Marks. Vertical location marks include Bench Marks and Vertical Control Marks. There are many times more marks focused on horizontal location than elevation (@fig-mark-types-last-recovery).
+
+Occasionally marks are "recovered" (checked). A surprising proportion were not found when last sought (@fig-mark-condition-age).
+
+Occoneechee Mountain has an interesting [geological history](http://www.ncgeology.com/Eno_interactive_webs/Occoneechee_mtn_formation_1.html).
+
+## Terminology {#sec-terminology}
+
+**datum**: "a standard reference point, set of points, or surface from which survey measurements are based."[^facts-pointers-2] See also "What is a datum?"[^facts-pointers-3]. More explanation:
+
+[^facts-pointers-2]: "What are Geodetic Datums?" NGS video. <https://geodesy.noaa.gov/corbin/class_description/NGS_Datums_vid1/>
+
+[^facts-pointers-3]: "What is a datum?" <https://oceanservice.noaa.gov/facts/datum.html>
+
+-   "\[a surface\] from which 'zero' is measured... geoid is a vertical datum tied to mean sea level"[^facts-pointers-4].
+
+-   NAD 83 is the current horizontal datum for continental North America, and NAVD 88 is the current vertical datum. They are part of the National Spatial Reference System managed by the NGS. In North America, NAD 83 is identical to the World Geodetic System 84 (WGS 84).[^facts-pointers-5]
+
+[^facts-pointers-4]: "Datums and Definitions" Session A of Datums, Heights and Geodey. Daniel R. Roman, Ph.D. <https://www.ngs.noaa.gov/GEOID/PRESENTATIONS/2007_02_24_CCPS/Roman_A_PLSC2007notes.pdf>
+
+[^facts-pointers-5]: What is a Geoid? Why do we use it and where does its shape come from? <https://www.usgs.gov/faqs/what-geoid-why-do-we-use-it-and-where-does-its-shape-come>
+
+**geoid**: a "shell" around the earth indicating an imaginary sea level.[^facts-pointers-6] This shell is lumpy due to differences in gravity.[^facts-pointers-7].
+
+[^facts-pointers-6]: What is a Geoid? Why do we use it and where does its shape come from? <https://www.usgs.gov/faqs/what-geoid-why-do-we-use-it-and-where-does-its-shape-come>
+
+[^facts-pointers-7]: <https://oceanservice.noaa.gov/geodesy/height-measurement/>
+
+## Mark types {#sec-mark-types}
+
+> In a geodetic context, the terms “survey mark” and “bench mark” are not the same. A bench mark is a specific type of survey mark that has a known elevation above or below an adopted surface or datum. Survey mark refers to any permanent marks or disks placed in the ground or attached to a permanent structure with known latitude, longitude or height information. Other terms used for survey mark are “survey point” or “control point.” Colloquially (and incorrectly) bench mark is used interchangeably with survey mark.[^facts-pointers-8]
+
+[^facts-pointers-8]: <https://geodesy.noaa.gov/datasheets/SurveyMarks_FAQ.shtml#SM>
+
+Below are the most common types of marks, summarized by George Leigh[^facts-pointers-9]. Since the counties in focus are well inland I ignore other mark types used to mark high water or at sea.
+
+[^facts-pointers-9]: Leigh, pages 16-21
+
+> There may be six or more survey disks in the vicinity of each Triangulation Station.... The main station, marked with a Triangulation Station disk, contains the factory stamping “TRIANGULATION STATION” with an equilateral triangle in the center....Beginning about 1905, an underground mark was set two to four or more feet underground and centered so as to be directly under the surface mark....Standard practice at a Triangulation Station was to also set two Reference Marks and an Azimuth Mark. For a period of time, in the 1970s, underground marks were also set at Azimuth Marks, hence the possible total of six disks. Some sites had additional reference marks added and some sites had marks set by other organizations, so having more than six disks in the area was quite possible.
+>
+> -   BENCH MARKS - A Bench Mark is a marked point whose elevation above or below an adopted geodetic vertical datum is known with a certain amount of accuracy.
+>
+> -   TRIANGULATION STATIONS - A Triangulation Station is a survey point established during a survey utilizing the triangulation surveying method
+>
+> -   REFERENCE MARKS - Reference Marks (RM) were set to assist in locating the Triangulation Station as well as to help determine if the Triangulation Station was undisturbed and in its original position.
+>
+> -   AZIMUTH MARKS – Beginning in 1927, a third Reference Mark, or “long RM”, was set about 1⁄4 mile distant from the Triangulation Station for use in providing a starting azimuth (direction) for local surveys. It was also used for determining magnetic declination, which is the difference between true north and magnetic north. Standard Azimuth Mark disks replaced azimuth reference marks about 1935.
+>
+> -   MAGNETIC STATIONS – The Survey began magnetic observations in 1843. The original purpose was to supply magnetic information for the nautical charts, but later observations were extended into the interior to aid local surveyors.
+>
+> -   GRAVITY STATIONS – The Survey began gravity observations in 1871.... Gravity observations were sometimes also made near the Gravity Station Reference Marks.
+>
+> -   GRAVITY STATION REFERENCE MARKS –Gravity Station RM disks were set to indicate the direction to the location of the gravity observations, rather than the direction to a Gravity Station disk.
+>
+> -   TOPOGRAPHIC STATIONS - Topographic Station disks were set in preparation for, or during, topographic surveys, i.e. coastal mapping, and also on airports during airport surveys.
+>
+> -   TRAVERSE STATIONS – This type of disk was set during traverse surveys, a type of survey that determines positions by means of a series of angles and distances between adjacent points along a route.
+>
+> -   USC&GS AND STATE SURVEY DISKS – This type of disk was used when cooperative surveys were conducted with state agencies, and by federal government work programs during the 1930s.
+
+Most marks are traverse station disks (set during traverse surveys) and their replacements, horizontal control marks.[^facts-pointers-10]
+
+[^facts-pointers-10]: BOTTLES, POTS, & PANS? – MARKING THE SURVEYS OF THE U.S. COAST & GEODETIC SURVEY AND NOAA. CDR George E. Leigh, NOAA Corps (Ret’d.). Published June 2018. Pages 21, 31. <https://www.ngs.noaa.gov/wp-content/uploads/2018/06/Survey_Mark_Art-2.pdf>
+
+There are many kinds of marks rarely found in these four counties--though there is one lookout tower (@sec-mission-continues).
+
+```{r, fig.height=8, fig.width=10}
+#| label: fig-mark-types-last-recovery
+#| fig-cap: "Survey and bench mark types: last recovery"
+#| fig-height: 6
+#| fig-width: 8
+
+data_for_plot <- nc_marks_counties |>
+  st_drop_geometry() |>
+  filter(!is.na(last_recv),
+         !is.na(first_recv)) |>
+  mutate(first_recv = as.numeric(str_extract(first_recv, "^[0-9]{4}")),
+         last_recv = as.numeric(str_extract(last_recv, "^[0-9]{4}"))
+         ) |>
+  mutate(decade_first_recv = floor(first_recv / 10) * 10,
+         decade_last_recv = floor(last_recv / 10) * 10) |>
+  mutate(decade_last_recv = floor(last_recv / 10) * 10) |>
+  replace_na(list(setting = "0 = UNSPECIFIED SETTING",
+                  marker = "DO = NOT SPECIFIED OR SEE DESCRIPTION")) 
+
+data_for_plot |>
+  count(decade_last_recv, marker) |>
+  arrange(decade_last_recv) |>
+  mutate(decade_last_recv = as_factor(decade_last_recv),
+         marker = fct_reorder(marker, n, sum)
+  ) |>
+  ggplot(aes(n, marker, fill = decade_last_recv, group = marker)) +
+  geom_col(show.legend = TRUE,
+           alpha = 0.7) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
+  scale_fill_viridis_d(end = 0.9) +
+  theme(legend.position = c(0.7, 0.4)) +
+  labs(
+    title = "Survey and bench mark types: last recovery",
+    subtitle = glue("Count of mark types by decade last recovered",
+                    "\n{comma(n_marks_counties)} marks in {n_counties} NC counties"),
+    x = NULL,
+    y = NULL,
+    caption = my_caption
+  )
+
+```
+
+<br>
+
+## Mark condition
+
+Reported mark conditions vary a lot, and a surprising proportion cannot be found.
+
+```{r, fig.height=6, fig.width=10}
+#| label: fig-mark-condition-age
+#| fig-cap: "Survey mark condition by year and decade last recovered"
+#| fig-height: 6
+#| fig-width: 10
+#| column: screen-right
+#| warning: false
+
+data_for_plot <- nc_marks_counties |>
+  st_drop_geometry() |>
+  filter(!is.na(last_recv)) |>
+  mutate(decade = floor(year(last_recv) / 10) * 10,
+         last_recv = as.numeric(str_extract(last_recv, "^[0-9]{4}")),
+         ) |>
+  replace_na(list(stability = "UNK",
+                  sat_use = "UNK")) %>%
+  mutate(n_cond_in_decade = n() / nrow(.),
+         .by = c(decade, last_cond))
+
+p1 <- data_for_plot |>
+  arrange(decade) |>
+  mutate(decade = as_factor(decade),
+         last_cond = fct_rev(last_cond)) |>
+  ggplot(aes(last_recv, last_cond, color = first_recv)) +
+  geom_jitter(size = 0.5, alpha = 0.4,
+              show.legend = FALSE) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05))) +
+  scale_color_viridis_c(end = 0.9) +
+  guides(color = guide_legend(override.aes = c(size = 3))) +
+  labs(
+    subtitle = "Condition by year last recovered\n(color = year first recovered)",
+    x = "Year last recovered",
+    y = "Condition",
+    tag = "A"
+  )
+
+p2 <- data_for_plot |>
+  mutate(last_cond = fct_rev(last_cond)) |>
+  ggplot() +
+  geom_mosaic(aes(x = product(decade), fill = last_cond),
+              alpha = 0.7) +
+  scale_x_productlist(labels = c("", "1930", "", "", "", "1970", "1980", "1990", "2000", "2010", "2020")) +
+  # TODO: Can the above approach to labels be generalized?
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
+  scale_fill_viridis_d(end = 0.9,
+                       direction = -1) +
+  guides(fill = guide_legend(reverse=TRUE)) +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank()) +
+  labs(
+    subtitle = "Condition by decade last recovered\n(width = relative number recovered)",
+    x = "Decade last recovered",
+    y = "Condition",
+    tag = "b"
+  )
+
+p1 + p2 +
+  plot_annotation(
+    title = "Survey mark condition by year last recovered", 
+    subtitle = glue("{comma(n_marks_counties)} marks in {n_counties} NC counties"),
+    caption = my_caption
+  )
+
+```
+
+<br>
+
+## Mark density
+
+Chatham and Orange are much more rural than Wake and Durham and consequently have much lower population density. While the range in population density by area is 12x, the range in mark density by area is only 3x, and the range in mark density by population is 4x (@tbl-mark-density).
+
+```{r}
+#| label: tbl-mark-density
+#| tbl-cap: "Density of marks"
+#| column: page-right
+
+mark_density <- nc_marks_counties |>
+  st_drop_geometry() |>
+  count(county) |>
+  inner_join(
+  nc_counties |>
+    st_drop_geometry(),
+  by = join_by("county")
+) |>
+  mutate(land_area_km2 = aland / 1000000,
+         land_area_mi2 = aland / 2.59e+6,
+         n_per_km2 = n / land_area_km2,
+         n_per_mi2 = n / land_area_mi2,
+         pop_per_mark = pop / n,
+         pop_per_km2 = pop / land_area_km2,
+         pop_per_mi2 = pop / land_area_mi2,
+         pop_per_area_norm = pop_per_mi2 / min(pop_per_mi2),
+         n_per_area_norm = n_per_mi2 / min(n_per_mi2),
+         pop_per_mark_norm = pop_per_mark / min(pop_per_mark)
+         ) |>
+  select(county, n, pop, land_area_km2, land_area_mi2, pop_per_mark, pop_per_km2, pop_per_mi2, 
+         n_per_km2, n_per_mi2, ends_with("_norm"))
+
+mark_density |>
+  gt() |>
+  fmt_number(columns = c(pop, pop_per_km2, pop_per_mi2), 
+             decimals = 0) |>
+  fmt_number(columns = c(pop_per_mark, land_area_km2, land_area_mi2),
+             decimals = 0) |>
+  fmt_number(columns = c(n_per_km2, n_per_mi2),
+             decimals = 1) |>
+  fmt_number(columns = ends_with("_norm"),
+             decimals = 1) |>
+  tab_spanner(
+    label = "Density",
+    columns = c(pop_per_mark, pop_per_km2, pop_per_mi2, n_per_km2, n_per_mi2)
+  ) |>
+  tab_spanner(
+    label = "Normalized range",
+    columns = ends_with("_norm")
+  ) |>
+  tab_source_note(md("*Table: Daniel Moul: Source: US Census ACS 2022 and TIGRIS database. Numbers rounded.*")) |>
+  tab_options(table.font.size = 10)
+```
+
+<br>
+
+## Acknowledgements {#sec-acknowledgements}
+
+Special thanks to CDR George E. Leigh, NOAA Corps (Ret’d.) for his informative history: *BOTTLES, POTS, & PANS? – MARKING THE SURVEYS OF THE U.S. COAST & GEODETIC SURVEY AND NOAA*.[^facts-pointers-11]
+
+[^facts-pointers-11]: Leigh 2018
+
+Thanks to the National Geodetic Survey, NOAA for making survey mark data so easily accessible.
+
+Thanks to NASA and CGIAR for area elevation data. Marks provide a point elevation. I supplement that with continuous elevation data collected by the Shuttle Radar Topography Mission (SRTM [NASA](https://www.earthdata.nasa.gov/sensors/srtm), [Wikipedia](https://en.wikipedia.org/wiki/Shuttle_Radar_Topography_Mission)) which is available through multiple sources. I use data post-processed by the [CGIAR Consortium for Spatial Information (CGIAR-CSI)](https://srtm.csi.cgiar.org) made available in the elevatr R package via [Amazon Web Services Terrain Tiles](https://registry.opendata.aws/terrain-tiles/) and the [Open Topography global datasets API](https://opentopography.org/developers/) in (@fig-counties-highest-lowest-elevations and other maps showing area elevations).
+
+Thanks to the US Census Bureau for making population and geographical data easily accessible. I accesses this data using the tidycensus and tigris R packages.
+
+Thanks to the many people developing and evolving the high-quality open source R ecosystem for data analysis and visualization.
+
+```         
+other attached packages:
+ [1] broman_0.80     ggmosaic_0.3.3  ggbump_0.1.0    gt_0.10.1       osmdata_0.2.5   patchwork_1.2.0 stars_0.6-4    
+ [8] abind_1.4-5     tigris_2.1      tidycensus_1.6  elevatr_0.99.0  tidyterra_0.5.2 terra_1.7-71    sf_1.0-15      
+[15] glue_1.7.0      janitor_2.2.0   units_0.8-5     scales_1.3.0    lubridate_1.9.3 forcats_1.0.0   stringr_1.5.1  
+[22] dplyr_1.1.4     purrr_1.0.2     readr_2.1.5     tidyr_1.3.1     tibble_3.2.1    ggplot2_3.4.4   tidyverse_2.0.0
+[29] here_1.0.1     
+```
+
+<br>
+
+## License
+
+The code generating this document is licensed under the MIT license and can be found at <https://github.com/dmoul/sad-story-mark-FY3210>
+
+This text is licensed under [CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/).
+
+## Other works
+
+If you enjoyed this you might enjoy other data analysis reports available at <https://dmoul.github.io>
+
+<br>

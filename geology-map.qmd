@@ -1,0 +1,382 @@
+# Geology map (experiment)
+
+```{r}
+#| label: setup
+#| include: false
+
+source(here::here("scripts/setup-libraries.R"))
+source(here("scripts/setup-data-prep.R"))
+
+```
+
+```{r}
+sf_use_s2(FALSE)
+
+xx <-  st_read(here("data/map/NorthCarolinaGeologicMap/NorthCarolinaGeologicMap/"))
+
+```
+
+## Test geologic map shapefile
+
+<https://files.nc.gov/ncdeq/Energy%20Mineral%20and%20Land%20Resources/Geological%20Survey/Assorted%20maps/NorthCarolinaGeologicMap.zip> and <https://www.deq.nc.gov/energy-mineral-and-land-resources/geological-survey/assorted-maps/info-1985-state-geologic-map/download> downloaded from <https://www.deq.nc.gov/about/divisions/energy-mineral-and-land-resources/north-carolina-geological-survey/ncgs-publications/statewide-geologic-maps-north-carolina> on 2024-02-24
+
+
+x2 does the geographic join OK to the shape of nc_counties but then is not picking up the features from xx
+
+```{r fig.height=8, fig.width=12}
+#| label: fig-geology-four-counties-x2
+#| fig-cap: "x2"
+#| fig-height: 8
+#| fig-width: 12
+#| column: screen-right
+#| eval: false
+##| warning: false
+##| message: false
+
+x2 <- st_join(
+  nc_counties,
+  #st_as_sf(nc_counties_border_union),
+  st_transform(xx, prj),
+  join = st_intersects)
+
+x2 |>
+ggplot() +
+  geom_sf(#data = x2,
+          aes(fill = TYPE)
+  )
+```
+
+<br>
+
+x3 doesn't seem to be picking up the intersects. But it can display xx's features OK,
+I cannot tell what "aoi" (area of interest) does in st_transform(). Doesn't seem to be a bounding box.
+
+```{r fig.height=8, fig.width=12}
+#| label: fig-geology-four-counties-x3
+#| fig-cap: "x3"
+#| fig-height: 8
+#| fig-width: 12
+#| column: screen-right
+#| eval: false
+##| warning: false
+##| message: false
+
+x3 <- st_join(#nc_counties,
+  st_transform(xx, prj,
+               aoi = st_bbox(nc_counties)), ## |> st_set_bbox(st_bbox(nc_counties))
+  st_as_sf(nc_counties_border_union),
+  join = st_overlaps) 
+
+ggplot() +
+  geom_sf(data = x3,
+          aes(fill = BELT)
+  )
+
+ggplot() +
+  geom_sf(data = x3,
+          aes(fill = TYPE)
+  )
+
+ggplot() +
+  geom_sf(data = x3,
+          aes(fill = TYPE)
+  )
+
+ggplot() +
+  geom_sf(data = x3,
+          aes(fill = FORMATION),
+          show.legend = FALSE
+  )
+```
+
+<br>
+
+I can't tell what x4 is doing. Not the right thing!
+
+```{r fig.height=8, fig.width=12}
+#| label: fig-geology-four-counties-x4
+#| fig-cap: "x4"
+#| fig-height: 8
+#| fig-width: 12
+#| column: screen-right
+#| eval: false
+
+x4 <- st_intersection(st_transform(xx, prj,
+                                   st_as_sf(nc_counties_border_union)
+                                   )
+)
+
+ggplot() +
+  geom_sf(data = x4,
+          aes(fill = TYPE)
+  )
+
+```
+
+<br>
+
+
+```{r fig.height=8, fig.width=12}
+#| label: fig-geology-four-counties-x4a
+#| fig-cap: "x4"
+#| fig-height: 8
+#| fig-width: 12
+#| column: screen-right
+#| eval: false
+
+x4 <- st_intersection(st_transform(xx, prj,
+                                   st_as_sf(nc_counties_border_union)
+                                   )
+)
+
+x3 <- st_join(#nc_counties,
+  st_transform(xx, prj,
+               aoi = st_bbox(nc_counties)), ## |> st_set_bbox(st_bbox(nc_counties))
+  st_as_sf(nc_counties_border_union),
+  join = st_overlaps) 
+
+x5 <- st_intersection(st_transform(xx, prj),
+                      nc_counties_border_union)
+
+# datums and ESPG codes are different, so definitely need st_transform()
+st_crs(xx)
+st_crs(nc_counties_border_union)
+
+# bbox is correct and the same (intersect seems to be right)
+st_bbox(x5)
+st_bbox(nc_counties_border_union)
+```
+
+
+```{r fig.height=8, fig.width=12}
+#| label: fig-geology-four-counties-x5
+#| fig-cap: "x5"
+#| fig-height: 8
+#| fig-width: 12
+#| column: screen-right
+
+x5 <- st_intersection(st_transform(xx, prj),
+                      nc_counties_border_union)
+
+ggplot() +
+  geom_sf(data = x5,
+          aes(fill = TYPE),
+          color = NA
+  ) +
+  geom_sf(data = nc_counties,
+          fill = NA,
+          linewidth = 1) +
+  geom_sf(data = nc_rivers,
+          color = "blue") +
+  geom_sf(data = nc_waterbodies,
+          color = "blue", fill = "blue")
+
+ggplot() +
+  geom_sf(data = x5,
+          aes(fill = GROUP_),
+          color = NA
+  ) +
+  geom_sf(data = nc_counties,
+          fill = NA,
+          linewidth = 1) +
+  geom_sf(data = nc_rivers,
+          color = "blue") +
+  geom_sf(data = nc_waterbodies,
+          color = "blue", fill = "blue")
+
+ggplot() +
+  geom_sf(data = x5,
+          aes(fill = BELT),
+          color = NA
+  ) +
+  geom_sf(data = nc_counties,
+          fill = NA,
+          linewidth = 1) +
+  geom_sf(data = nc_rivers,
+          color = "blue") +
+  geom_sf(data = nc_waterbodies,
+          color = "blue", fill = "blue")
+
+```
+
+<br>
+
+```{r fig.height=8, fig.width=12}
+#| label: fig-geology-four-counties-x6
+#| fig-cap: "x6"
+#| fig-height: 8
+#| fig-width: 12
+#| column: screen-right
+
+geology_data <- st_intersection(st_transform(xx, prj),
+                      nc_counties_border_union)
+
+ggplot() +
+  geom_sf(data = x5,
+          aes(fill = GROUP_),
+          color = NA
+  ) +
+  geom_sf(data = nc_rivers, color = "dodgerblue", fill = "dodgerblue",
+          linewidth = 0.25) +
+  geom_sf(data = nc_waterbodies, color = "dodgerblue", fill = "dodgerblue",
+          linewidth = 0.25) +
+  geom_sf(data = nc_counties, color="black",
+          fill = NA, size = 0.25) +
+  geom_sf(data = nc_counties_border_union, color="black",
+          fill = NA, size = 1) +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = c(0.9, 0.8)
+        ) +
+  labs(
+    title = "Add title",
+    # subtitle = glue("{comma(n_marks_counties)} marks in {n_counties} NC counties"),
+    caption = my_caption
+  )
+
+
+```
+
+
+<br>
+
+```{r fig.height=8, fig.width=12}
+#| label: fig-geology-four-counties-x7
+#| fig-cap: "x7"
+#| fig-height: 8
+#| fig-width: 12
+#| column: screen-right
+
+geology_data <- st_intersection(st_transform(xx, prj),
+                      nc_counties_border_union)
+
+ggplot() +
+  geom_sf(data = x5,
+          aes(fill = TYPE),
+          color = NA
+  ) +
+  geom_sf(data = nc_rivers, color = "dodgerblue", fill = "dodgerblue",
+          linewidth = 0.25) +
+  geom_sf(data = nc_waterbodies, color = "dodgerblue", fill = "dodgerblue",
+          linewidth = 0.25) +
+  geom_sf(data = nc_counties, color="black",
+          fill = NA, size = 0.25) +
+  geom_sf(data = nc_counties_border_union, color="black",
+          fill = NA, size = 1) +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = c(0.9, 0.8)
+        ) +
+  labs(
+    title = "Add title",
+    # subtitle = glue("{comma(n_marks_counties)} marks in {n_counties} NC counties"),
+    caption = my_caption
+  )
+
+
+```
+
+<br>
+
+```{r fig.height=8, fig.width=12}
+#| label: fig-geology-four-counties-x8
+#| fig-cap: "x8"
+#| fig-height: 8
+#| fig-width: 12
+#| column: screen-right
+
+xx_names <- distinct(xx, Name) |>
+  arrange(Name) |>
+  rownames_to_column(var = "key")
+
+geology_data <- st_intersection(st_transform(xx, prj),
+                      nc_counties_border_union) |>
+  inner_join(xx_names, by = "Name")
+
+ggplot() +
+  geom_sf(data = geology_data,
+          aes(fill = key),
+          color = NA
+  ) +
+  geom_sf(data = nc_rivers, color = "dodgerblue", fill = "dodgerblue",
+          linewidth = 0.25) +
+  geom_sf(data = nc_waterbodies, color = "dodgerblue", fill = "dodgerblue",
+          linewidth = 0.25) +
+  geom_sf(data = nc_counties, color="black",
+          fill = NA, size = 0.25) +
+  geom_sf(data = nc_counties_border_union, color="black",
+          fill = NA, size = 1) +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = c(0.95, 0.8)
+        #legend.position = "bottom"
+        ) +
+  guides(fill = guide_legend(ncol = 2)) +
+  labs(
+    title = "Rock types",
+    # subtitle = glue("{comma(n_marks_counties)} marks in {n_counties} NC counties"),
+    # fill = "     ",
+    fill = "Key",
+    caption = my_caption
+  )
+
+```
+
+<br>
+
+```{r}
+
+geology_data |>
+  st_drop_geometry() |>
+  mutate(key = as.numeric(key)) |>
+  arrange(key) |>
+  replace_na(list(Name = "Other")) |>
+  distinct(key, Name) |>
+  rename(`Rock Type` = Name) |>
+  gt()
+
+```
+
+<br>
+
+```{r fig.height=8, fig.width=12}
+#| label: fig-geology-four-counties-diabase
+#| fig-cap: "x8"
+#| fig-height: 8
+#| fig-width: 12
+#| column: screen-right
+
+xx |>
+  filter(FORMATION == "Diabase") |>
+  ggplot() +
+  geom_sf(fill = "firebrick",
+          alpha = 0.4) +
+  # geom_sf(data = geology_data,
+  #         aes(fill = key),
+  #         color = NA
+  # ) +
+  geom_sf(data = nc_rivers, color = "dodgerblue", fill = "dodgerblue",
+          linewidth = 0.25) +
+  geom_sf(data = nc_waterbodies, color = "dodgerblue", fill = "dodgerblue",
+          linewidth = 0.25) +
+  # geom_sf(data = nc_counties_all_tigris, color="black",
+  #         fill = NA, size = 0.25) +
+  geom_sf(data = nc_counties_border_union, color="black",
+          fill = NA, size = 1) +
+  geom_sf(data = nc_counties, color="black",
+          fill = NA, size = 1) +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = c(0.95, 0.8)
+        #legend.position = "bottom"
+        ) +
+  guides(fill = guide_legend(ncol = 2)) +
+  labs(
+    title = "Diabase",
+    # subtitle = glue("{comma(n_marks_counties)} marks in {n_counties} NC counties"),
+    # fill = "     ",
+    #fill = "Key",
+    caption = my_caption
+  )
+
+```

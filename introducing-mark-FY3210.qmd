@@ -1,0 +1,346 @@
+# Introducing mark FY3210
+
+```{r}
+#| label: setup
+#| include: false
+
+source(here::here("scripts/setup-libraries.R"))
+source(here("scripts/setup-data-prep.R"))
+
+```
+
+
+The highest point in Orange County, North Carolina is Occoneechee Mountain, just south of Hillsboro, the county seat. The mountain is 262 m (867 ft)^[I show meters first, since surveyors' convention is to record their data in SI units.] above sea level, rising 350 feet from the Eno River, which flows along the northern border of the small [Occoneechee Mountain NC State Natural Area](https://www.ncparks.gov/park-features/occoneechee-mountain-state-natural-area). The sound of traffic on Interstate 85 follows you as your trail cuts through the trees on its way up the mountain, and if you hope to ascend through the trees to enjoy the a vista, you will be disappointed if the leaves are in. But there is a forestry and radio tower at the top that offers you some sense of having arrived somewhere, and the walk will do you good.
+
+```{r}
+#| label: fig-occoneechee-mt-map
+#| fig-cap: "Map of Occoneechee Mountain State Natural Area and a portion of Hillsboro.<br> Source: OpenStreetMap <https://www.openstreetmap.org/relation/9742275>"
+#| out-width: "90%"
+  
+knitr::include_graphics(here("images/occoneechee-mt-osm.jpg"))
+
+```
+
+<br>
+
+## In the beginning
+
+In 1933, in the depths of the Depression, the U.S. Coast & Geodetic Survey (precursor to the NGS), placed mark [FY3210](https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=FY3210) near the top of Occoneechee Mountain. How do we know? Because each mark has its own data sheet, and the datasheet tells a story.
+
+```
+PROGRAM = datasheet95, VERSION = 8.12.5.17
+Starting Datasheet Retrieval...
+1        National Geodetic Survey,   Retrieval Date = FEBRUARY 16, 2024
+ FY3210 ***********************************************************************
+ FY3210  DESIGNATION -  HILLSBORO
+ FY3210  PID         -  FY3210
+ FY3210  STATE/COUNTY-  NC/ORANGE
+ FY3210  COUNTRY     -  US
+ FY3210  USGS QUAD   -  HILLSBOROUGH (2019)
+ FY3210
+ FY3210                         *CURRENT SURVEY CONTROL
+ FY3210  ______________________________________________________________________
+ FY3210* NAD 83(2001) POSITION- 36 03 42.56888(N) 079 07 18.55999(W)   ADJUSTED
+ FY3210* NAVD 88 ORTHO HEIGHT -   262.    (meters)      860.    (feet) SCALED
+ FY3210  ______________________________________________________________________
+```
+
+<br>
+
+NAD 83(2001) is the North American Datum^[See @sec-terminology ] of 1983, the standard used by the NGS today. The horizontal position is provided in degrees, minutes, seconds in the North and West directions (West of the [prime meridian](https://en.wikipedia.org/wiki/Prime_meridian_(Greenwich)) at Greenwich, England). You can find Occoneechee Mountain on [OpenStreetMap](https://www.openstreetmap.org/relation/9742275) by searching for *Occoneechee Mountain* or latitude and longitude: *36°03'42.6"N 79°07'18.6"W* (or the decimal equivalent: *36.06182, -79.12182*).
+
+NAVD 88 is the North American Vertical Datum of 1988, also the current standard. The Orthographic height ("ortho height") is defined relative to a datum. This mark is 262 meters (860 ft) above sea level.
+
+## Four counties in NC
+
+I will be showing maps that include Orange, Durham, Wake, and Chatham Counties. They are in the North Carolina [Piedmont](https://en.wikipedia.org/wiki/Central_North_Carolina) and above the [fall line](https://en.wikipedia.org/wiki/Fall_line).^[Map of North Carolina with fall line <https://www.climate.gov/media/12938>  Image caption: "The fall line in North Carolina separates the Piedmont from the Coastal Plain. East of the line, there is little high ground, and many cities and towns sit in or next to the floodplains of the region's many rivers. NOAA Climate.gov image, adapted from digital elevation model data from [NOAA NCEI's bathymetric data viewer](https://maps.ngdc.noaa.gov/viewers/bathymetry/)."] For more about these counties and North Carolina in general, see [North Carolina trends: geography, population, income, and education](https://dmoul.github.io/nc-trends/), which I completed in April 2023.
+
+```{r fig.height=6, fig.width=12}
+#| label: fig-county-names
+#| fig-cap: "Selected counties"
+#| fig-height: 6
+#| fig-width: 12
+#| column: screen-right
+#| warning: false
+
+# adjust some labels up or down from county centroid to keep text from overlapping
+
+# offset <- 2 * 1609.34 # meters per mile
+offset <- 0.05 # degrees
+
+nc_counties_centroids_adj <- nc_counties %>%
+  mutate(
+    cent = st_centroid(geometry),
+    needs_offset = 0,
+    y_trans = 0
+  ) |> 
+  mutate(
+    needs_offset = case_when(
+      county %in% c("Orange")                               ~   1.5,
+      county %in% c("Durham")                               ~  -0.6,
+      TRUE                                                  ~     0
+    ),
+    y_trans = offset * needs_offset
+  ) %>%
+  mutate(
+    trans = map2(0, y_trans, ~ st_point(c(.x, .y))),
+    cent_new = cent + trans 
+  ) %>%
+  st_set_geometry(.$cent_new) |>
+  st_set_crs(prj) |>
+  select(-c(cent, needs_offset, y_trans, trans, cent_new))
+
+ggplot() +
+  geom_sf(data = nc_counties_all_tigris, color = "grey80",
+          fill = NA, linewidth = 0.2) +
+  geom_sf(data = nc_counties, color="black",
+          fill = "firebrick", alpha = 0.25, size = 0.25) +
+  geom_sf_text(data = nc_counties_centroids_adj,
+               aes(label = county),
+               size = 4) +
+  geom_sf(data = st_union(nc_counties_all_tigris), color="black",
+          fill = NA) + 
+  labs(
+    title = "Selected counties",
+    x = NULL,
+    y = NULL,
+    caption = my_caption
+  )
+
+```
+
+<br>
+
+Occoneechee Mountain is the highest elevation in the four counties where most of the people in "[the triangle](https://en.wikipedia.org/wiki/Research_Triangle)" live. @fig-counties-highest-lowest-elevations presents some of the highest and lowest points of elevation in these counties. Where multiple points are close together I show only one.^[Note that the mark PID [EZ2890](https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=EZ2890) near White Cross must be wrong. 
+Ortho_ht for this mark is reported to be 383.610 m (1258.6 ft). Yet the highest point in Orange Count NC is Occoneechee mountain^[<https://files.nc.gov/ncparks/maps-and-brochures/occoneechee-mountain-factsheet.pdf>  <https://en.wikipedia.org/wiki/Occoneechee_Mountain_State_Natural_Area> ] where there are (or were) two marks near the peak: [FY3210](http://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=FY3210) and 
+[FY3209](http://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=FY3209) at 262 m (859.6 ft). 
+At the location of PID EZ2890 the elevation reported by SRTM is a more reasonable 231 m (757.9 ft), which if accurate, 
+indicates the orhto_ht of [EZ2890](https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=EZ2890) has a 60% error. 
+So I use the STRM elevation instead in @fig-counties-highest-lowest-elevations.]
+
+```{r fig.height=8, fig.width=12}
+#| label: fig-counties-highest-lowest-elevations
+#| fig-cap: "Some of the survey marks with highest and lowest elevations"
+#| fig-height: 8
+#| fig-width: 12
+#| column: screen-right
+#| warning: false
+#| message: false
+
+min_dist_between_m <- 6000
+
+### Heighest points
+
+marks_for_plot_tmp <- nc_marks_counties |>
+  select(county, pid, ortho_ht, geometry) |>
+  filter(county %in% c("Orange", "Chatham", "Durham", "Wake")) |>
+  slice_max(order_by = ortho_ht, n = 20) |>
+  arrange(desc(ortho_ht))
+
+dist_matrix <- drop_units(as.matrix(st_distance(marks_for_plot_tmp, marks_for_plot_tmp)))
+dist_matrix[dist_matrix < min_dist_between_m] <- 0
+diag(dist_matrix) <- -1
+
+to_del <- logical(length(dist_matrix))
+dim(to_del) <- c(nrow(dist_matrix), ncol(dist_matrix))
+for(i in 1:ncol(dist_matrix)) {
+  #writeLines(paste0("i: ", i))
+  found_diag <- FALSE
+  for(j in 1:nrow(dist_matrix)) {
+    #writeLines(paste0("i,j: ", i, ", ", j)) 
+    if(!found_diag & dist_matrix[i, j] != -1) {
+      #writeLines(paste0("nope: ", i, ", ", j)) 
+    } else
+      if(dist_matrix[i, j] == -1) {
+        found_diag <- TRUE
+        #writeLines(paste0("diag: ", i, ", ", j)) 
+      } else {
+        #writeLines(paste0("post-diag: ", i, ", ", j))
+        to_del[i, j] <- (dist_matrix[i, j] == 0)
+      }
+    }
+  }
+
+redundant <- colSums(to_del)
+marks_for_plot_tmp2 <- cbind(marks_for_plot_tmp, redundant)
+marks_for_plot_high <- marks_for_plot_tmp2 |>
+  filter(redundant == 0)
+
+### Lowest points
+
+marks_for_plot_tmp <- nc_marks_counties |>
+    select(county, pid, ortho_ht, geometry) |>
+    filter(county %in% c("Orange", "Chatham", "Durham", "Wake")) |>
+    slice_min(order_by = ortho_ht, n = 10) |>
+    arrange(ortho_ht)
+
+dist_matrix <- drop_units(as.matrix(st_distance(marks_for_plot_tmp, marks_for_plot_tmp)))
+dist_matrix[dist_matrix < min_dist_between_m] <- 0
+diag(dist_matrix) <- -1
+
+to_del <- logical(length(dist_matrix))
+dim(to_del) <- c(nrow(dist_matrix), ncol(dist_matrix))
+for(i in 1:ncol(dist_matrix)) {
+  #writeLines(paste0("i: ", i))
+  found_diag <- FALSE
+  for(j in 1:nrow(dist_matrix)) {
+    #writeLines(paste0("i,j: ", i, ", ", j)) 
+    if(!found_diag & dist_matrix[i, j] != -1) {
+      #writeLines(paste0("del this: ", i, ", ", j)) 
+      to_del[i, j] <- (dist_matrix[i, j] == 0)
+    } else
+      if(dist_matrix[i, j] == -1) {
+        found_diag <- TRUE
+        #writeLines(paste0("diag: ", i, ", ", j)) 
+      } else {
+        #writeLines(paste0("nope (post-diag): ", i, ", ", j))
+        #to_del[i, j] <- (dist_matrix[i, j] == 0)
+      }
+    }
+  }
+
+redundant <- colSums(to_del)
+marks_for_plot_tmp2 <- cbind(marks_for_plot_tmp, redundant)
+marks_for_plot_low <- marks_for_plot_tmp2 |>
+  filter(redundant == 0)
+
+marks_for_plot <- bind_rows(
+  marks_for_plot_low,
+  marks_for_plot_high
+)
+
+### Now plot both
+
+ggplot() +
+  geom_spatraster(data = elev_nc_counties,
+                  alpha = 0.7) +
+  geom_sf(data = nc_rivers, color = "dodgerblue", fill = "dodgerblue",
+          linewidth = 0.25) +
+  geom_sf(data = nc_waterbodies, color = "dodgerblue", fill = "dodgerblue",
+          linewidth = 0.25) +
+  geom_sf(data = nc_counties, color="black",
+          fill = NA, size = 0.25) +
+  geom_sf(data = marks_for_plot,
+          color = "white",
+          size = 5,
+          show.legend = TRUE
+          ) +
+  geom_sf(data = marks_for_plot,
+          aes(color = ortho_ht),
+          size = 3,
+          show.legend = TRUE
+          ) +
+  geom_sf_text(data = marks_for_plot,
+          aes(label = pid),
+          size = 3,
+          nudge_x = -0.04, nudge_y = -0.025,
+          show.legend = FALSE) +
+  geom_sf_text(data = marks_for_plot,
+          aes(label = glue("{round(ortho_ht * 3.28084, digits = 1)} ft")),
+          size = 3,
+          nudge_x = 0.025, nudge_y = -0.025,
+          show.legend = FALSE) +
+  geom_sf(data = nc_counties_border_union, color="black",
+          fill = NA, size = 1) +
+  scale_fill_gradientn(colors = pal_dem_screen$hex,
+                       values = scales::rescale(pal_dem_screen$limit),
+                       limit = range(pal_dem_screen$limit),
+                       na.value = "transparent",
+  ) +
+   scale_color_gradientn(colors = pal_dem_screen$hex,
+                       values = scales::rescale(pal_dem_screen$limit),
+                       limit = range(pal_dem_screen$limit),
+                       na.value = "transparent",
+  ) +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = c(0.9, 0.8)
+        ) +
+  labs(
+    title = "Some of the survey marks with highest and lowest elevation",
+    subtitle = glue("{n_counties} NC counties"),
+    caption = my_caption,
+    x = NULL,
+    y = NULL,
+    color = "Elevation (m)",
+    fill = "Elevation (m)"
+  )
+
+```
+
+<br>
+
+## Surveyors' detailed measurements
+
+The next portion is of interest to surveyors more than the general public. Surveyors go to school and pass a professional exam for a reason, and I'm content to trust them in their pursuit of accurate measurements. I'll simply make four points:
+
+1. The geoid is the imaginary sphere around the earth at sea level.^[See @sec-terminology ] The datum is based on the geoid.
+1. The 'GEOID18 height accuracy estimate' page referenced below (<https://www.ngs.noaa.gov/GEOID/GEOID18/computation.html>) reports a vertical accuracy of 0.030 m (3 mm or 1.2 inches) with 95% confidence interval (orthographic height has it's own additional error).
+1. A first order horizontal mark means it was the most accurate type and was used to calculate the location of second and third order marks.
+1. The reference marks provide a starting point to recalculate a mark's location.
+
+```
+ FY3210  GEOID HEIGHT    -        -30.482 (meters)                     GEOID18
+ FY3210  LAPLACE CORR    -         -3.40  (seconds)                    DEFLEC18
+ FY3210  HORZ ORDER      -  FIRST
+ FY3210
+ FY3210.The horizontal coordinates were established by classical geodetic methods
+ FY3210.and adjusted by the National Geodetic Survey in August 2005.
+ FY3210
+ FY3210.The orthometric height was scaled from a topographic map.
+ FY3210
+ FY3210.Significant digits in the geoid height do not necessarily reflect accuracy.
+ FY3210.GEOID18 height accuracy estimate available here.
+ FY3210
+ FY3210.Click photographs - Photos may exist for this station.
+ FY3210
+ FY3210.The Laplace correction was computed from DEFLEC18 derived deflections.
+ FY3210
+ FY3210. The following values were computed from the NAD 83(2001) position.
+ FY3210
+ FY3210;                    North         East     Units Scale Factor Converg.
+ FY3210;SPC NC       -   256,467.249   598,626.165   MT  0.99997243   -0 04 13.1
+ FY3210;SPC NC       -   841,426.30  1,963,992.68   sFT  0.99997243   -0 04 13.1
+ FY3210;UTM  17      - 3,992,438.114   669,152.857   MT  0.99995256   +1 06 21.1
+ FY3210
+ FY3210!             -  Elev Factor  x  Scale Factor =   Combined Factor
+ FY3210!SPC NC       -   0.99996370  x   0.99997243  =   0.99993613
+ FY3210!UTM  17      -   0.99996370  x   0.99995256  =   0.99991626
+ FY3210
+ FY3210:                Primary Azimuth Mark                     Grid Az
+ FY3210:SPC NC       -  HILLSBORO RM 3 AZIMUTH                   147 08 29.7
+ FY3210:UTM  17      -  HILLSBORO RM 3 AZIMUTH                   145 57 55.5
+ FY3210
+ FY3210_U.S. NATIONAL GRID SPATIAL ADDRESS: 17SPV6915292438(NAD 83)
+ FY3210
+ FY3210|---------------------------------------------------------------------|
+ FY3210| PID    Reference Object                     Distance      Geod. Az  |
+ FY3210|                                                           dddmmss.s |
+ FY3210| FY3854 HILLSBORO RM 1                       22.140 METERS 04152     |
+ FY3210| FY3209 HILLSBORO LOOKOUT TOWER               6.280 METERS 07653     |
+ FY3210| FY3855 HILLSBORO RM 2                       24.970 METERS 11443     |
+ FY3210| FY3856 HILLSBORO RM 3 AZIMUTH                             1470416.6 |
+ FY3210| EZ2857 CHAPEL HILL UNIV OF NC TANK         APPROX.18.0 KM 1604006.7 |
+ FY3210| EZ1203 CHAPEL HILL                         APPROX.20.9 KM 1614652.7 |
+ FY3210| EZ2856 CHAPEL HILL UNIV OF NC STACK        APPROX.18.0 KM 1623301.5 |
+ FY3210| FY3192 HILLSBORO ATT MICROWAVE MAST        APPROX. 4.0 KM 1782201.0 |
+ FY3210| FY3304 MEBANE MUNICIPAL TANK               APPROX.14.1 KM 2881542.1 |
+ FY3210|---------------------------------------------------------------------|
+ FY3210
+ FY3210                          SUPERSEDED SURVEY CONTROL
+ FY3210
+ FY3210  NAD 83(1993)-  36 03 42.57181(N)    079 07 18.56874(W) AD(       ) 1
+ FY3210  NAD 83(1986)-  36 03 42.57141(N)    079 07 18.56959(W) AD(       ) 1
+ FY3210  NAD 27      -  36 03 42.07200(N)    079 07 19.51800(W) AD(       ) 1
+ FY3210
+ FY3210.Superseded values are not recommended for survey control.
+ FY3210
+ FY3210.NGS no longer adjusts projects to the NAD 27 or NGVD 29 datums.
+ FY3210.See file dsdata.pdf to determine how the superseded data were derived.
+```
+
+<br>
+
+***TODO: add teaser for the next chapter***
+
+<br>
