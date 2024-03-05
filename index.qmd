@@ -13,9 +13,9 @@ source(here("scripts/setup-data-prep.R"))
 This document is in draft.
 :::
 
-Where am I exactly on the earth? This is not a new question--or an easy one to answer accurately. For close to 300 years surveyors have been crisscrossing the North American lands that Europeans have settled on. Where there is Western civilization there is ownership. And where there is ownership, there are borders and governments with a geographically-defined jurisdiction.
+Where am I exactly on the earth? This is not a new question--or an easy one to answer accurately. For close to 300 years surveyors have been crisscrossing the North American lands that Europeans have settled on. Where there is Western civilization there is ownership and government, both requiring accurate borders.
 
-The most famous American surveyor is George Washington, in his early years surveying parts of the western frontier of Virginia (now Culpeper, Frederick and Hampshire Counties). He surveyed the town of Alexandria, Virginia (near modern-day Washington D.C., which was founded and named in his honor many decades later). He sketched a map of his travels in what is now Western Pennsylvania during the French and Indian War^[Washington as Public Land Surveyor <https://www.loc.gov/collections/george-washington-papers/articles-and-essays/george-washington-survey-and-mapmaker/washington-as-public-land-surveyor/> ] which was published with his journal of that trip.^[The Journal of Major George Washington (1754). George Washington. 1754. DigitalCommons@University of Nebraska - Lincoln. Libraries at University of Nebraska-Lincoln
+The most famous American surveyor is undoubtedly George Washington. He surveyed parts of the western frontier of Virginia (now Culpeper, Frederick and Hampshire Counties) and the town of Alexandria, Virginia (near modern-day Washington D.C., which was founded and named in his honor many decades later). During the French and Indian War he sketched a map of his travels in what is now western Pennsylvania,^[Washington as Public Land Surveyor <https://www.loc.gov/collections/george-washington-papers/articles-and-essays/george-washington-survey-and-mapmaker/washington-as-public-land-surveyor/> ] which was published with his journal of that trip.^[The Journal of Major George Washington (1754). George Washington. 1754. DigitalCommons@University of Nebraska - Lincoln. Libraries at University of Nebraska-Lincoln
 Electronic Texts in American Studies. <https://digitalcommons.unl.edu/etas/33/> ] 
 
 ```{r}
@@ -42,7 +42,7 @@ knitr::include_graphics(here("images/Detail-from-Jefferson-map-300dpi.png"))
 
 <br>
 
-## Survey marks
+## Survey marks today
 
 After a surveying crew working as agents for the National Geodetic Survey (NGS) put in lot of work to find an accurate location, they place a mark to indicate the location and record the details in the NGS database. This makes it much less effort and expense to find an accurate location there or nearby in the future. Today the NGS manages the U.S. National Spatial Reference System, which includes more than 1.5 million survey points.
 

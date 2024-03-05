@@ -10,7 +10,7 @@ source(here("scripts/setup-data-prep.R"))
 ```
 
 
-The highest point in Orange County, North Carolina is Occoneechee Mountain, just south of Hillsboro, the county seat. The mountain is 262 m (867 ft)^[I show meters first, since surveyors' convention is to record their data in SI units.] above sea level, rising 350 feet from the Eno River, which flows along the northern border of the small [Occoneechee Mountain NC State Natural Area](https://www.ncparks.gov/park-features/occoneechee-mountain-state-natural-area). The sound of traffic on Interstate 85 follows you as your trail cuts through the trees on its way up the mountain, and if you hope to ascend through the trees to enjoy the a vista, you will be disappointed if the leaves are in. But there is a forestry and radio tower at the top that offers you some sense of having arrived somewhere, and the walk will do you good.
+The highest point in Orange County, North Carolina is at the top of Occoneechee Mountain, just south of Hillsboro, the county seat. The mountain is 262 m (867 ft) above sea level, rising 350 feet from the Eno River, which flows along the northern border of the small [Occoneechee Mountain NC State Natural Area](https://www.ncparks.gov/park-features/occoneechee-mountain-state-natural-area). The sound of traffic on Interstate 85 follows you as your trail cuts through the trees on its way up the little mountain, and if you hope to ascend through the trees to enjoy the vista, you will be disappointed if the leaves are in. But there is a forestry and radio tower at the top that offers you some sense of having arrived somewhere, and the walk will do you good.
 
 ```{r}
 #| label: fig-occoneechee-mt-map
@@ -25,7 +25,7 @@ knitr::include_graphics(here("images/occoneechee-mt-osm.jpg"))
 
 ## In the beginning
 
-In 1933, in the depths of the Depression, the U.S. Coast & Geodetic Survey (precursor to the NGS), placed mark [FY3210](https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=FY3210) near the top of Occoneechee Mountain. How do we know? Because each mark has its own data sheet, and the datasheet tells a story.
+In 1933, in the depths of the Depression, the U.S. Coast & Geodetic Survey (precursor to the NGS), placed survey triangulation mark [FY3210](https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=FY3210) near the top of Occoneechee Mountain. How do we know? Because each mark has its own data sheet, and a datasheet tells a story.
 
 ```
 PROGRAM = datasheet95, VERSION = 8.12.5.17
@@ -47,13 +47,19 @@ Starting Datasheet Retrieval...
 
 <br>
 
-NAD 83(2001) is the North American Datum^[See @sec-terminology ] of 1983, the standard used by the NGS today. The horizontal position is provided in degrees, minutes, seconds in the North and West directions (West of the [prime meridian](https://en.wikipedia.org/wiki/Prime_meridian_(Greenwich)) at Greenwich, England). You can find Occoneechee Mountain on [OpenStreetMap](https://www.openstreetmap.org/relation/9742275) by searching for *Occoneechee Mountain* or latitude and longitude: *36°03'42.6"N 79°07'18.6"W* (or the decimal equivalent: *36.06182, -79.12182*).
+The USGS QUAD is the name of the map quadrangle published by the U.S. Geological Survey. The Hillsboro (2019) 7.5 minute (1:24,000) quadrangle is [here](https://store.usgs.gov/product/511512) [115 MB PDF].
 
-NAVD 88 is the North American Vertical Datum of 1988, also the current standard. The Orthographic height ("ortho height") is defined relative to a datum. This mark is 262 meters (860 ft) above sea level.
+The CURRENT SURVEY CONTROL data include the latest location and elevation details and should be considered authoritative.
+
+The next row is horizontal location. The latitude and longitude are based on NAD 83(2001), the North American Datum^[See @sec-terminology ] of 1983, wich the standard in use by the USGS today. The horizontal position is expressed in degrees, minutes, seconds in the North and West directions, latitude and longitude respectively. West is relative to the [prime meridian](https://en.wikipedia.org/wiki/Prime_meridian_(Greenwich)) at Greenwich, England). You can find Occoneechee Mountain on [OpenStreetMap](https://www.openstreetmap.org/relation/9742275) by searching for *Occoneechee Mountain* or latitude and longitude: *36°03'42.6"N 79°07'18.6"W* (or their decimal equivalent: *36.06182, -79.12182*).
+
+NAVD 88 is the North American Vertical Datum of 1988, also the current standard. The orthographic height ("ortho height") is defined relative to the datum. FY3210 is 262 meters (about 860 ft) above sea level.
 
 ## Four counties in NC
 
-I will be showing maps that include Orange, Durham, Wake, and Chatham Counties. They are in the North Carolina [Piedmont](https://en.wikipedia.org/wiki/Central_North_Carolina) and above the [fall line](https://en.wikipedia.org/wiki/Fall_line).^[Map of North Carolina with fall line <https://www.climate.gov/media/12938>  Image caption: "The fall line in North Carolina separates the Piedmont from the Coastal Plain. East of the line, there is little high ground, and many cities and towns sit in or next to the floodplains of the region's many rivers. NOAA Climate.gov image, adapted from digital elevation model data from [NOAA NCEI's bathymetric data viewer](https://maps.ngdc.noaa.gov/viewers/bathymetry/)."] For more about these counties and North Carolina in general, see [North Carolina trends: geography, population, income, and education](https://dmoul.github.io/nc-trends/), which I completed in April 2023.
+I will be showing maps that include Orange, Durham, Wake, and Chatham Counties. Orange, Durham and Wake include the universities at the three points of the "triangle" that inspired the creation of [Research Triangle Park](https://en.wikipedia.org/wiki/Research_Triangle). Chatham is a high-growth county from which some triangle workers commute. These counties are in the North Carolina [Piedmont](https://en.wikipedia.org/wiki/Central_North_Carolina) and above the [fall line](https://en.wikipedia.org/wiki/Fall_line).^[Map of North Carolina with fall line <https://www.climate.gov/media/12938> Image caption: "The fall line in North Carolina separates the Piedmont from the Coastal Plain. East of the line, there is little high ground, and many cities and towns sit in or next to the floodplains of the region's many rivers. NOAA Climate.gov image, adapted from digital elevation model data from [NOAA NCEI's bathymetric data viewer](https://maps.ngdc.noaa.gov/viewers/bathymetry/)."] 
+
+For more about these counties and North Carolina in general, see [North Carolina trends: geography, population, income, and education](https://dmoul.github.io/nc-trends/), which I completed in April 2023.
 
 ```{r fig.height=6, fig.width=12}
 #| label: fig-county-names
@@ -63,11 +69,8 @@ I will be showing maps that include Orange, Durham, Wake, and Chatham Counties. 
 #| column: screen-right
 #| warning: false
 
-# adjust some labels up or down from county centroid to keep text from overlapping
-
-# offset <- 2 * 1609.34 # meters per mile
+# adjust some labels up or down from county centroids to keep text from overlapping
 offset <- 0.05 # degrees
-
 nc_counties_centroids_adj <- nc_counties %>%
   mutate(
     cent = st_centroid(geometry),
@@ -111,16 +114,16 @@ ggplot() +
 
 <br>
 
-Occoneechee Mountain is the highest elevation in the four counties where most of the people in "[the triangle](https://en.wikipedia.org/wiki/Research_Triangle)" live. @fig-counties-highest-lowest-elevations presents some of the highest and lowest points of elevation in these counties. Where multiple points are close together I show only one.^[Note that the mark PID [EZ2890](https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=EZ2890) near White Cross must be wrong. 
+Occoneechee Mountain is the highest elevation in these four counties. @fig-counties-highest-lowest-elevations presents some of the highest and lowest points of elevation in these counties. Where multiple marks are close to each other I show only one.^[Note that the elevation for mark PID [EZ2890](https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=EZ2890) near White Cross must be wrong. 
 Ortho_ht for this mark is reported to be 383.610 m (1258.6 ft). Yet the highest point in Orange Count NC is Occoneechee mountain^[<https://files.nc.gov/ncparks/maps-and-brochures/occoneechee-mountain-factsheet.pdf>  <https://en.wikipedia.org/wiki/Occoneechee_Mountain_State_Natural_Area> ] where there are (or were) two marks near the peak: [FY3210](http://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=FY3210) and 
 [FY3209](http://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=FY3209) at 262 m (859.6 ft). 
-At the location of PID EZ2890 the elevation reported by SRTM is a more reasonable 231 m (757.9 ft), which if accurate, 
+At the location of PID EZ2890 the elevation reported by SRTM [NASA](https://www.earthdata.nasa.gov/sensors/srtm) via [CGIAR Consortium for Spatial Information (CGIAR-CSI)](https://srtm.csi.cgiar.org) is a more reasonable 231 m (757.9 ft), which if accurate, 
 indicates the orhto_ht of [EZ2890](https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=EZ2890) has a 60% error. 
-So I use the STRM elevation instead in @fig-counties-highest-lowest-elevations.]
+So I use the STRM/CGIAR-CSI elevation instead in @fig-counties-highest-lowest-elevations.]
 
 ```{r fig.height=8, fig.width=12}
 #| label: fig-counties-highest-lowest-elevations
-#| fig-cap: "Some of the survey marks with highest and lowest elevations"
+#| fig-cap: "Some of the survey marks at highest and lowest elevations"
 #| fig-height: 8
 #| fig-width: 12
 #| column: screen-right
@@ -272,12 +275,12 @@ ggplot() +
 
 ## Surveyors' detailed measurements
 
-The next portion is of interest to surveyors more than the general public. Surveyors go to school and pass a professional exam for a reason, and I'm content to trust them in their pursuit of accurate measurements. I'll simply make four points:
+The next portion is of interest to surveyors more than the general public. Surveyors go to school and pass a professional exam for a reason, and I'm content to trust them in their pursuit of accurate measurements. Here I'll simply make four points:
 
-1. The geoid is the imaginary sphere around the earth at sea level.^[See @sec-terminology ] The datum is based on the geoid.
-1. The 'GEOID18 height accuracy estimate' page referenced below (<https://www.ngs.noaa.gov/GEOID/GEOID18/computation.html>) reports a vertical accuracy of 0.030 m (3 mm or 1.2 inches) with 95% confidence interval (orthographic height has it's own additional error).
+1. The geoid is the imaginary sphere-like shell around the earth at sea level.^[See @sec-terminology ] The vertical datum is based on the geoid.
+1. The 'GEOID18 height accuracy estimate' page referenced below (<https://www.ngs.noaa.gov/GEOID/GEOID18/computation.html>) reports a vertical accuracy of 0.030 m (3 cm or 1.2 inches) with 95% confidence interval (orthographic height has its own additional error).
 1. A first order horizontal mark means it was the most accurate type and was used to calculate the location of second and third order marks.
-1. The reference marks provide a starting point to recalculate a mark's location.
+1. The reference marks provide a starting point to find and if necessary recalculate a mark's location.
 
 ```
  FY3210  GEOID HEIGHT    -        -30.482 (meters)                     GEOID18

@@ -235,22 +235,55 @@ contrib <- nc_marks_counties |>
 n_org <- nrow(contrib)
 
 
-### Gravity elevation data
+### Local gravity including elevation above sea level
 
 r_e_m = 6371.009 * 1000 # radius of earth in meters
 # g_alt = 9.80665 * (r_e_m / (r_e_m + 500))^2
 # g_alt_mGal = g_alt / .00001
 
-data_for_plot_gravity <- nc_marks_counties |>
-  select(ortho_ht, model_grav, county) |>
-  mutate(gravity_theoretical = 9.80665 * (r_e_m / (r_e_m + ortho_ht))^2 / 0.00001,
-         gravity_delta = model_grav - gravity_theoretical,
-         gravity_pct_delta = model_grav / gravity_theoretical)
+# International Gravity Formula (IGF)
+# local_g <- 9.780327 * (1 + 0.0053024 * sin(lat * pi / 180))^2 - 0.0000058 * sin(2 * lat)^2 - 3.0863^(-6) * elevation
+# then divide by 10e-6 to convert units to mGal
 
-dta_gravity_theoretical_line <- data_for_plot_gravity |>
+data_for_plot_gravity <- nc_marks_counties |>
+  select(ortho_ht, dec_lat, model_grav, county) |>
+  mutate(gravity_theoretical_simple = 9.80665 * (r_e_m / (r_e_m + ortho_ht))^2 / 0.00001,
+         gravity_delta_simple = model_grav - gravity_theoretical_simple,
+         gravity_pct_delta_simple = model_grav / gravity_theoretical_simple,
+         # gravity_theoretical_igf = (9.780327 * (1 + 0.0053024 * sin(dec_lat * pi / 180))^2 - 0.0000058 * sin(2 * dec_lat)^2 - 3.0863^(-6) * ortho_ht) / 10e-6,
+         # gravity_delta_igf = model_grav - gravity_theoretical_igf,
+         # gravity_pct_delta_igf = model_grav / gravity_theoretical_igf,
+         gravity_theoretical_welmec = (9.780327 * (1 + 0.0053024 * sin(dec_lat * pi / 180)^2 - 0.0000058 * sin(2 * dec_lat)^2) - 0.000003085 * ortho_ht),
+         gravity_theoretical_welmec_mgal = gravity_theoretical_welmec / 1.0e-5,
+         gravity_delta_theoretical_welmec_mgal = model_grav - gravity_theoretical_welmec_mgal,
+         gravity_pct_deltal_welmec_mgal = model_grav / gravity_theoretical_welmec_mgal
+         )
+
+gravity_delta_theoretical_welmec_0_90 <- tibble(
+  lat_degree = 0:90,
+  grav = 9.780327 * (1 + 0.0053024 * sin(lat_degree * pi / 180)^2 - 0.0000058 * sin(2 * lat_degree)^2) # at sea level, in ms^-2
+)
+
+dta_gravity_theoretical_simple <- data_for_plot_gravity |>
   filter(ortho_ht > 0) |>
   filter(ortho_ht == max(ortho_ht, na.rm = TRUE) | ortho_ht == min(ortho_ht, na.rm = TRUE)) |>
   distinct(ortho_ht, .keep_all = TRUE) |>
   rename(model_grav_orig = model_grav,
-         model_grav = gravity_theoretical) # to simplify plotting them together
+         model_grav = gravity_theoretical_simple) # to simplify plotting them together
 
+# dta_gravity_theoretical_igf <- data_for_plot_gravity |>
+#   filter(ortho_ht > 0) |>
+#   filter(ortho_ht == max(ortho_ht, na.rm = TRUE) | ortho_ht == min(ortho_ht, na.rm = TRUE)) |>
+#   distinct(ortho_ht, .keep_all = TRUE) |>
+#   rename(model_grav_orig = model_grav,
+#          model_grav = gravity_theoretical_igf) # to simplify plotting them together
+
+dta_gravity_theoretical_welmec <- data_for_plot_gravity |>
+  filter(ortho_ht > 0) |>
+  filter(ortho_ht == max(ortho_ht, na.rm = TRUE) | ortho_ht == min(ortho_ht, na.rm = TRUE)) |>
+  distinct(ortho_ht, .keep_all = TRUE) |>
+  rename(model_grav_orig = model_grav,
+         model_grav = gravity_theoretical_welmec) # to simplify plotting them together
+
+dta_gravity_theoretical_welmec_mgal <- dta_gravity_theoretical_welmec |>
+  mutate(model_grav = model_grav / 1.0e-5)

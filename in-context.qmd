@@ -124,7 +124,7 @@ ggplot() +
 
 ## Many kinds of marks
 
-There are many kinds of marks (@sec-mark-types). The most common are marks determining horizontal location: Transverse Station marks and there predecessors Horizontal Control Disks, Reference Marks, and Boundary Marks. Vertical location marks include Bench Marks and Vertical Control Marks. There are many times more marks focused on horizontal location than elevation. Less common mark types are shown in @fig-mark-types-last-recovery.
+There are many kinds of marks (@sec-mark-types). The most common are marks determining horizontal location: Transverse Station marks and their predecessors Horizontal Control Disks, Reference Marks, and Boundary Marks. Vertical location marks include Bench Marks and Vertical Control Marks. There are many times more marks focused on horizontal location than elevation. Less common mark types are shown in @fig-mark-types-last-recovery.
 
 ```{r, fig.height=8, fig.width=12}
 #| label: fig-mark-types-first-and-last-recovery

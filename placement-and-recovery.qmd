@@ -25,7 +25,7 @@ Our mark had every advantage as a highly valued triangulation station disk, at t
 
 ```{r}
 #| label: fig-triangulation-station-mark
-#| fig-cap: "Triangulation station survey mark, NGS. Source: Figure 39 in George, page 17."
+#| fig-cap: "Triangulation station survey mark, NGS. Source: Figure 39 in Leigh, page 17."
 #| out-width: "60%"
   
 knitr::include_graphics(here("images/trianglulation-station-leo-1962.jpg"))
@@ -37,7 +37,7 @@ knitr::include_graphics(here("images/trianglulation-station-leo-1962.jpg"))
 > There may be six or more survey disks in the vicinity of each Triangulation Station. The main station, marked with a Triangulation Station disk, contains the factory stamping “TRIANGULATION STATION” with an equilateral triangle in the center. The triangle was usually about 2 cm on each side although occasionally from c1911 to c1925 (ex PID = BM0627, PN0027, TT0805, & OF1769), flat Triangulation Station disks were used which had a triangle of about 2.5 cm on a side, similar to the later Traverse Station disks. Beginning about 1905, an underground mark was set two to four or more feet underground and centered so as to be directly under the surface mark. The underground marks were set to preserve the position if the surface mark was damaged or destroyed. Both disks contained the same factory stamping and the exact same designation (name) and date. Triangulation Stations were normally named for an area feature or the property owner. Just prior to setting, the disk would be stamped by the original surveyor, as for example, “JONES 1936.” In the NGS database, the name would be “JONES” and the year set 1936. The disk was usually set so that the stamping could be read by an observer facing north. The disk would be set in a concrete monument, or set in a drill-hole in a large structure or bedrock. The concrete monument is normally about flush with the ground’s surface, 12 inches in diameter, and 48 inches or more deep, see Figure 15, with the bottom larger in diameter to help resist frost heave. Standard practice at a Triangulation Station was to also set two Reference Marks and an Azimuth Mark. For a period of time, in the 1970s, underground marks were also set at Azimuth Marks, hence the possible total of six disks. Some sites had additional reference marks added and some sites had marks set by other organizations, so having
 more than six disks in the area was quite possible.
 > 
-> REFERENCE MARKS - Reference Marks (RM) were set to assist in locating the Triangulation Station as well as to help determine if the Triangulation Station was undisturbed and in its original position. RMs could also be used to reset a station mark if required. Reference Marks were factory stamped with “REFERENCE MARK”and with an arrow pointing up, see Figure 40. The original surveyor stamped the RM with the name of the Triangulation Station plus the number of the RM and the date just prior to setting. For example, the first RM for station JONES would be stamped “JONES NO. 1 1936.” When setting, the surveyor rotated the disk until it pointed directly toward the Triangulation Station disk. The surveyor then measured the direction and distance from the Triangulation Station to the Reference Marks (RMs) and recorded the information as part of the station’s description. Later, if a surveyor attempting to find a Triangulation Station stumbled upon a RM first, the arrow and the published distance and direction between the RM and station would be valuable aids in the station recovery. To check the position of the Triangulation Station, the new surveyor could measure the angles and distances to the Reference Marks and compare them to the original values. Beginning in the 1920s, two Reference Marks per Triangulation Station were specified. Reference Marks were usually set within 30 meters (one tape length) of the station. They were numbered clockwise from north and set about 90 degrees apart. If a RM was destroyed, a new Reference Mark would be set using the next consecutive number. The disk would be set in a concrete monument, or set in a drill-hole in a large structure or bedrock.^[George, pages 17=18]
+> REFERENCE MARKS - Reference Marks (RM) were set to assist in locating the Triangulation Station as well as to help determine if the Triangulation Station was undisturbed and in its original position. RMs could also be used to reset a station mark if required. Reference Marks were factory stamped with “REFERENCE MARK”and with an arrow pointing up, see Figure 40. The original surveyor stamped the RM with the name of the Triangulation Station plus the number of the RM and the date just prior to setting. For example, the first RM for station JONES would be stamped “JONES NO. 1 1936.” When setting, the surveyor rotated the disk until it pointed directly toward the Triangulation Station disk. The surveyor then measured the direction and distance from the Triangulation Station to the Reference Marks (RMs) and recorded the information as part of the station’s description. Later, if a surveyor attempting to find a Triangulation Station stumbled upon a RM first, the arrow and the published distance and direction between the RM and station would be valuable aids in the station recovery. To check the position of the Triangulation Station, the new surveyor could measure the angles and distances to the Reference Marks and compare them to the original values. Beginning in the 1920s, two Reference Marks per Triangulation Station were specified. Reference Marks were usually set within 30 meters (one tape length) of the station. They were numbered clockwise from north and set about 90 degrees apart. If a RM was destroyed, a new Reference Mark would be set using the next consecutive number. The disk would be set in a concrete monument, or set in a drill-hole in a large structure or bedrock.^[Leigh, pages 17-18]
 
 <br>
 
@@ -98,7 +98,7 @@ wash away, rust away, and/or be destroyed by cultural
 development, and surveyors returning to the point need to be
 able to find it and positively identify it. The mark needs to
 remain very stable or the survey values will no longer be
-valid.^[Leigh, p 2]
+valid.^[Leigh, page 2]
 
 ```{r, fig.height=8, fig.width=10}
 #| label: fig-mark-settings
@@ -235,7 +235,7 @@ A standpipe was a water tower, which must have been nearby.
  FY3210'AND TO RIGHT EDGE OF SAME STANDPIPE IS N 42 DEG 10 MIN E.
 ```
 
-From the location of FY3210, the standpipe's width was 13 minutes or $\frac{13}{60}^{th}$ of a degree, which would make it about `r round(1 * 5280 * sin(13/60 * pi/180))` ft wide if one mile away, or `r round(1.5 * 5280 * sin(13/60 * pi/180))` ft wide if 1.5 miles away.^[My calculation: $r\sin\theta = width$, $1 * 5280 ft * sin(13/60 * pi/180) ≈ 20 ft$. ] I assume this is the "ALUMINUM WATER TANK AT FOOT OF HILL IN TOWN OF HILLSBORO" mentioned earlier.
+From the location of FY3210, the standpipe's width was 13 minutes or $\frac{13}{60}^{th}$ of a degree, which would make it about `r round(1 * 5280 * sin(13/60 * pi/180))` ft wide if one mile away, or `r round(1.5 * 5280 * sin(13/60 * pi/180))` ft wide if 1.5 miles away.^[My calculation: $r\sin\theta = width$, $1 mi * 5280 \frac{ft}{mi} * sin(13 min * \frac{1 degree}{60 min} * \frac{pi\ radian}{180 degree}) ≈ 20 ft$. ] Is this the same as the "ALUMINUM WATER TANK AT FOOT OF HILL IN TOWN OF HILLSBORO" mentioned earlier? I assume so.
 
 ***TODO: Find more (location, history, picture)***
  
@@ -393,7 +393,7 @@ Did the earlier surveyor report an inaccurate height of the light? Or was there 
 
 ## The sad end
 
-Fast-forward 16 years, and we find obliteration. New radio equipment needed a shelter, and a metal shed now covers where the mark is (or was). Reference mark no. 1 is still doing it's job, though it suffered some damage. Mark no. 2 is simply gone from its bore hole in the boulder, and mark no. 3 is confirmed truly gone.
+Fast-forward 16 years, and we find obliteration. New radio equipment needed a shelter, and a metal shed now covers where the triangulation station mark is (or was). Reference mark no. 1 is still doing its job, though it suffered some damage. Reference mark no. 2 is simply gone from its bore hole in the boulder, and mark no. 3 is confirmed truly gone.
 
 ```
  FY3210                          STATION RECOVERY (1985)
@@ -413,10 +413,10 @@ Fast-forward 16 years, and we find obliteration. New radio equipment needed a sh
 
 ## The end of the end
 
-The next attempt to recover it 19 years is a bleak epilog: now even the partially defaced reference mark is gone. I hear sadness at the end of a diligent search in the words "No marker could be found".
+The next attempt to recover it 19 years is a bleak epilogue: now even the partially defaced reference mark appears to be missing. I hear sadness in the words "No marker could be found".
 
 ```
-FY3210                          STATION RECOVERY (2004)
+ FY3210                          STATION RECOVERY (2004)
  FY3210
  FY3210'RECOVERY NOTE BY US POWER SQUADRON 2004
  FY3210'SEARCH WAS MADE IN THE AREA OF PLOTTED POSITION.  NO MARKER COULD BE
@@ -425,7 +425,7 @@ FY3210                          STATION RECOVERY (2004)
 
 ## The mission continues {#sec-mission-continues}
 
-But the survey mission endures. Nearby mark [FY3209](https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=FY3209) has been located under the lookout tower owned by the NC State Forest Service since 1954.
+But the survey mission endures. Nearby mark [FY3209](https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=FY3209) has been located under the lookout tower since 1954.
 
 ```
  FY3209  DESIGNATION -  HILLSBORO LOOKOUT TOWER
@@ -484,6 +484,6 @@ And its survival has been repeatedly confirmed:
 
 The land is now owned by the state^[Purchased in 1997 <https://en.wikipedia.org/wiki/Occoneechee_Mountain_State_Natural_Area> ] (referred to as a "state park" although its actual designation is a NC State Natural Area).
 
-Putting a mark directly under the tower was a smart decision!
+As of 2006 the mark was still there. Putting a mark directly under the tower seems like a smart decision!
 
 <br>
