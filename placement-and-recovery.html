@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./gravity-elevation.html" rel="next">
+<link href="./mysteries.html" rel="next">
 <link href="./in-context.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -211,20 +211,20 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./mysteries.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">New mysteries</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./gravity-elevation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">A Diversion: gravity and elevation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">A Diversion: gravity and elevation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./geology-map.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Geology map (experiment)</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./gravity-elevation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">A Diversion: gravity and elevation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Geology map (experiment)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -286,7 +286,7 @@ window.Quarto = {
 <img src="images/trianglulation-station-leo-1962.jpg" class="img-fluid figure-img" style="width:60.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-triangulation-station-mark-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.1: Triangulation station survey mark, NGS. Source: Figure 39 in George, page 17.
+Figure&nbsp;3.1: Triangulation station survey mark, NGS. Source: Figure 39 in Leigh, page 17.
 </figcaption>
 </figure>
 </div>
@@ -336,6 +336,11 @@ Figure&nbsp;3.1: Triangulation station survey mark, NGS. Source: Figure 39 in Ge
 <span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> my_caption</span>
 <span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: A numeric `legend.position` argument in `theme()` was deprecated in ggplot2
+3.5.0.
+ℹ Please use the `legend.position.inside` argument of `theme()` instead.</code></pre>
+</div>
 <div class="cell-output-display">
 <div id="fig-mark-types-last-recovery" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -360,35 +365,35 @@ Figure&nbsp;3.2: Survey and bench mark types: last recovery
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data_for_plot <span class="ot">&lt;-</span> nc_marks_counties <span class="sc">|&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(last_recv)) <span class="sc">|&gt;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">first_recv =</span> <span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(first_recv, <span class="st">"^[0-9]{4}"</span>)),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">last_recv =</span> <span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(last_recv, <span class="st">"^[0-9]{4}"</span>))</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">|&gt;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">decade =</span> <span class="fu">floor</span>(last_recv <span class="sc">/</span> <span class="dv">10</span>) <span class="sc">*</span> <span class="dv">10</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace_na</span>(<span class="fu">list</span>(<span class="at">setting =</span> <span class="st">"0 = UNSPECIFIED SETTING"</span>,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">marker =</span> <span class="st">"DO = NOT SPECIFIED OR SEE DESCRIPTION"</span>)) </span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>data_for_plot <span class="sc">|&gt;</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(decade, setting) <span class="sc">|&gt;</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(decade) <span class="sc">|&gt;</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">decade =</span> <span class="fu">as_factor</span>(decade),</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">setting =</span> <span class="fu">fct_reorder</span>(setting, n, sum)) <span class="sc">|&gt;</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(n, setting, <span class="at">fill =</span> decade, <span class="at">group =</span> setting)) <span class="sc">+</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>))) <span class="sc">+</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">end =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.4</span>)) <span class="sc">+</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Survey and bench mark setting"</span>,</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">glue</span>(<span class="st">"Count of mark settings by decade last recovered"</span>,</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"; {comma(n_marks_counties)} marks in {n_counties} NC counties"</span>),</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> my_caption</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data_for_plot <span class="ot">&lt;-</span> nc_marks_counties <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(last_recv)) <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">first_recv =</span> <span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(first_recv, <span class="st">"^[0-9]{4}"</span>)),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">last_recv =</span> <span class="fu">as.numeric</span>(<span class="fu">str_extract</span>(last_recv, <span class="st">"^[0-9]{4}"</span>))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>         ) <span class="sc">|&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">decade =</span> <span class="fu">floor</span>(last_recv <span class="sc">/</span> <span class="dv">10</span>) <span class="sc">*</span> <span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace_na</span>(<span class="fu">list</span>(<span class="at">setting =</span> <span class="st">"0 = UNSPECIFIED SETTING"</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">marker =</span> <span class="st">"DO = NOT SPECIFIED OR SEE DESCRIPTION"</span>)) </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>data_for_plot <span class="sc">|&gt;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(decade, setting) <span class="sc">|&gt;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(decade) <span class="sc">|&gt;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">decade =</span> <span class="fu">as_factor</span>(decade),</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">setting =</span> <span class="fu">fct_reorder</span>(setting, n, sum)) <span class="sc">|&gt;</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(n, setting, <span class="at">fill =</span> decade, <span class="at">group =</span> setting)) <span class="sc">+</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>))) <span class="sc">+</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">end =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.4</span>)) <span class="sc">+</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Survey and bench mark setting"</span>,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">glue</span>(<span class="st">"Count of mark settings by decade last recovered"</span>,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"; {comma(n_marks_counties)} marks in {n_counties} NC counties"</span>),</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> my_caption</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-mark-settings" class="quarto-figure quarto-figure-center quarto-float anchored">
@@ -471,7 +476,7 @@ FY3210'THIS MARK IS NOT VISIBLE FROM GROUND WITHOUT CLEARING.</code></pre>
 <pre><code> FY3210'BEARING FROM THE STATION TO
  FY3210'LEFT EDGE OF WHITE STANDPIPE IN HILLSBORO IS N 41 DEG 57 MIN E
  FY3210'AND TO RIGHT EDGE OF SAME STANDPIPE IS N 42 DEG 10 MIN E.</code></pre>
-<p>From the location of FY3210, the standpipe’s width was 13 minutes or <span class="math inline">\(\frac{13}{60}^{th}\)</span> of a degree, which would make it about 20 ft wide if one mile away, or 30 ft wide if 1.5 miles away.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> I assume this is the “ALUMINUM WATER TANK AT FOOT OF HILL IN TOWN OF HILLSBORO” mentioned earlier.</p>
+<p>From the location of FY3210, the standpipe’s width was 13 minutes or <span class="math inline">\(\frac{13}{60}^{th}\)</span> of a degree, which would make it about 20 ft wide if one mile away, or 30 ft wide if 1.5 miles away.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> Is this the same as the “ALUMINUM WATER TANK AT FOOT OF HILL IN TOWN OF HILLSBORO” mentioned earlier? I assume so.</p>
 <p><strong><em>TODO: Find more (location, history, picture)</em></strong></p>
 <p><a href="https://openorangenc.org/buildings/hillsborough-water-treatment-plant" class="uri">https://openorangenc.org/buildings/hillsborough-water-treatment-plant</a> would be promising; it’s near Occoneechee Mountain. But it wasn’t completed until 1936, and it’s not quite the right bearing.</p>
 <p>Maybe there’s something in here: <a href="https://www.orangecountync.gov/1246/Local-History-Collection" class="uri">https://www.orangecountync.gov/1246/Local-History-Collection</a></p>
@@ -594,7 +599,7 @@ FY3210'1-1/2 MILES SOUTHWEST OF HILLSBOROUGH.</code></pre>
 </section>
 <section id="the-sad-end" class="level2" data-number="3.9">
 <h2 data-number="3.9" class="anchored" data-anchor-id="the-sad-end"><span class="header-section-number">3.9</span> The sad end</h2>
-<p>Fast-forward 16 years, and we find obliteration. New radio equipment needed a shelter, and a metal shed now covers where the mark is (or was). Reference mark no. 1 is still doing it’s job, though it suffered some damage. Mark no. 2 is simply gone from its bore hole in the boulder, and mark no. 3 is confirmed truly gone.</p>
+<p>Fast-forward 16 years, and we find obliteration. New radio equipment needed a shelter, and a metal shed now covers where the triangulation station mark is (or was). Reference mark no. 1 is still doing its job, though it suffered some damage. Reference mark no. 2 is simply gone from its bore hole in the boulder, and mark no. 3 is confirmed truly gone.</p>
 <pre><code> FY3210                          STATION RECOVERY (1985)
  FY3210
  FY3210'RECOVERY NOTE BY US POWER SQUADRON 1985 (WKB)
@@ -611,8 +616,8 @@ FY3210'1-1/2 MILES SOUTHWEST OF HILLSBOROUGH.</code></pre>
 </section>
 <section id="the-end-of-the-end" class="level2" data-number="3.10">
 <h2 data-number="3.10" class="anchored" data-anchor-id="the-end-of-the-end"><span class="header-section-number">3.10</span> The end of the end</h2>
-<p>The next attempt to recover it 19 years is a bleak epilog: now even the partially defaced reference mark is gone. I hear sadness at the end of a diligent search in the words “No marker could be found”.</p>
-<pre><code>FY3210                          STATION RECOVERY (2004)
+<p>The next attempt to recover it 19 years is a bleak epilogue: now even the partially defaced reference mark appears to be missing. I hear sadness in the words “No marker could be found”.</p>
+<pre><code> FY3210                          STATION RECOVERY (2004)
  FY3210
  FY3210'RECOVERY NOTE BY US POWER SQUADRON 2004
  FY3210'SEARCH WAS MADE IN THE AREA OF PLOTTED POSITION.  NO MARKER COULD BE
@@ -620,7 +625,7 @@ FY3210'1-1/2 MILES SOUTHWEST OF HILLSBOROUGH.</code></pre>
 </section>
 <section id="sec-mission-continues" class="level2" data-number="3.11">
 <h2 data-number="3.11" class="anchored" data-anchor-id="sec-mission-continues"><span class="header-section-number">3.11</span> The mission continues</h2>
-<p>But the survey mission endures. Nearby mark <a href="https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=FY3209">FY3209</a> has been located under the lookout tower owned by the NC State Forest Service since 1954.</p>
+<p>But the survey mission endures. Nearby mark <a href="https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=FY3209">FY3209</a> has been located under the lookout tower since 1954.</p>
 <pre><code> FY3209  DESIGNATION -  HILLSBORO LOOKOUT TOWER
  FY3209  PID         -  FY3209
  FY3209  STATE/COUNTY-  NC/ORANGE
@@ -670,7 +675,7 @@ FY3210'1-1/2 MILES SOUTHWEST OF HILLSBOROUGH.</code></pre>
  FY3209'CONTINUE APPROX 0.5 MILE TO TOP OF MOUNTAIN. (VEHICLES ALLOWED WITH
  FY3209'PARK RANGER PERMISSION.)</code></pre>
 <p>The land is now owned by the state<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> (referred to as a “state park” although its actual designation is a NC State Natural Area).</p>
-<p>Putting a mark directly under the tower was a smart decision!</p>
+<p>As of 2006 the mark was still there. Putting a mark directly under the tower seems like a smart decision!</p>
 <p><br></p>
 
 
@@ -678,9 +683,9 @@ FY3210'1-1/2 MILES SOUTHWEST OF HILLSBOROUGH.</code></pre>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p>George, pages 17=18<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>Leigh, p 2<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>My calculation: <span class="math inline">\(r\sin\theta = width\)</span>, <span class="math inline">\(1 * 5280 ft * sin(13/60 * pi/180) ≈ 20 ft\)</span>. <a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Leigh, pages 17-18<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Leigh, page 2<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>My calculation: <span class="math inline">\(r\sin\theta = width\)</span>, <span class="math inline">\(1 mi * 5280 \frac{ft}{mi} * sin(13 min * \frac{1 degree}{60 min} * \frac{pi\ radian}{180 degree}) ≈ 20 ft\)</span>. <a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>Purchased in 1997 <a href="https://en.wikipedia.org/wiki/Occoneechee_Mountain_State_Natural_Area" class="uri">https://en.wikipedia.org/wiki/Occoneechee_Mountain_State_Natural_Area</a> <a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
@@ -1080,8 +1085,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./gravity-elevation.html" class="pagination-link" aria-label="<span class='chapter-number'>4</span>&nbsp; <span class='chapter-title'>A Diversion: gravity and elevation</span>">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">A Diversion: gravity and elevation</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./mysteries.html" class="pagination-link" aria-label="<span class='chapter-number'>4</span>&nbsp; <span class='chapter-title'>New mysteries</span>">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">New mysteries</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
