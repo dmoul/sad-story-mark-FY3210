@@ -7,6 +7,8 @@
 source(here::here("scripts/setup-libraries.R"))
 source(here("scripts/setup-data-prep.R"))
 
+options(scipen = 9)
+
 ```
 
 ::: {.callout-note}
@@ -19,13 +21,106 @@ Since the datasheets include modeled gravity, let's see what we can learn.
 
 What does gravity have to do with elevation? And why is it interesting enough to dwell on here? All other things being equal, stepping on a scale at higher elevation results in a lower reading on the scale (if the scale is accurate enough!). And *local gravity* varies for more reasons than elevation.
 
+
+### Simple explanation
+
 Ignoring local conditions, the acceleration due to gravity $g$ at altitude $h$ above sea level is 
 
 $$
 g_{altitude} = g(\frac{r_e}{r_e + h})^2
 $$ {#eq-gravity}
 
-where radius of the earth $r_e = 6371.009\ km$ and acceleration due to gravity at sea level is $9.80665\ m/s^2$ ^[<https://www.vcalc.com/wiki/KurtHeckman/Gravity+Acceleration+by+Altitude> ]. *Altitude* is another name for *elevation* and is measured relative to a specific [datum](https://en.wikipedia.org/wiki/Geodetic_datum). In the case of US survey marks, the datum used here is the North American vertical datum of 1988 (NAVD 88).
+where radius of the earth $r_e = 6371.009\ km$ and acceleration due to gravity at sea level is $9.80665\ m/s^2$ ^[<https://www.vcalc.com/wiki/KurtHeckman/Gravity+Acceleration+by+Altitude> ]. *Altitude* is another name for *elevation* and is measured relative to a specific vertical [datum](https://en.wikipedia.org/wiki/Geodetic_datum). In the case of US survey marks, the datum used here is the North American vertical datum of 1988 (NAVD 88).
+
+
+### Less simple explanation
+
+A less simple model takes into account the earth's spining causing a larger radius at the equator than at the poles. As noted at <https://en.wikipedia.org/wiki/Theoretical_gravity#Basic_formulas> :
+
+> WELMEC formula: In all German standards offices the free-fall acceleration g is calculated in respect to the average latitude $lat$ and the average height above sea level $h$ with the WELMEC–Formel:
+> 
+
+Which we can write as follows:
+
+$$
+g(lat, h) = 9.780318 \frac{m}{s^2}\ (1 + 0.0053024\ sin^2 (lat) - 0.0000058 sin^2(2\ lat) - 0.000003085 \frac{1}{s^2}\ h
+$$ {#eq-welmec}
+
+<br>
+
+This change in gravity due to latitude can be visualized as follows.
+
+```{r fig.height=8, fig.width=12}
+#| label: fig-latitude-gravity
+#| fig-cap: "Affect of latitude on gravity at sea level"
+#| fig-height: 6
+#| fig-width: 10
+#| column: page-right
+
+dta_for_plot <- gravity_delta_theoretical_welmec_0_90 |>
+  arrange(grav) |>
+  mutate(grav_mgal = grav / 1.0e-5,
+         delta_equator = grav_mgal - min(grav_mgal))
+
+dta_for_plot2 <- dta_for_plot |>
+  filter(lat_degree == 36)
+
+p1 <- dta_for_plot |>
+  ggplot(aes(grav, lat_degree)) +
+  geom_line(linewidth = 0.25) +
+  geom_point(size = 0.5) +
+  geom_point(data = dta_for_plot2,
+             size = 3, shape = 21) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05)),
+                     sec.axis = sec_axis(~ . / 1.0e-5, name = "Gravity mGal")) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05)),
+                     breaks = c(0, 30, 60, 90)) +
+  labs(
+    subtitle = "Local gravity",
+    x = "Gravity ms^-2",
+    y = "Latitude in degrees"
+  )
+
+at_lat_36 <- (9.780318 - 9.80665) / 1e-5 + dta_for_plot2$delta_equator
+
+p2 <- dta_for_plot |>
+  ggplot(aes(delta_equator, lat_degree)) +
+  geom_line(linewidth = 0.25) +
+  geom_point(size = 0.5) +
+  geom_point(data = dta_for_plot2,
+             size = 3, shape = 21) +
+  annotate("text", x = dta_for_plot2$delta_equator, y = dta_for_plot2$lat_degree - 5,
+           label = glue("At {dta_for_plot2$lat_degree} degrees (which is within our four counties),",
+                        "\nadjusting for latitude adds {round(dta_for_plot2$delta_equator)} mGal",
+                        "\ncompared to gravity at the equator.",
+                        "\nIt adds {round(at_lat_36)} mGal compared to the", 
+                        "\naverage gravity 9.80665 ms^-2", 
+                        " ({round(9.80665 / 1e-5)} mGal)"),
+           hjust = 0, vjust = 1, size = 3
+  ) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05)),
+                     # sec.axis = sec_axis(~ . / 1.0e-5, name = "Gravity mGal")
+                     ) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05)),
+                     breaks = c(0, 30, 60, 90)) +
+  labs(
+    subtitle = "Change in local gravity compared to equator",
+    x = "Gravity mGal",
+    y = NULL
+    
+  )
+
+p1 + p2 +
+  plot_annotation(
+    title = "Affect of latitude on gravity at sea level",
+    subtitle = "WELMEC–Formel formula",
+    caption = "Daniel Moul. Using equation at en.wikipedia.org/wiki/Theoretical_gravity"
+  )
+  
+```
+
+
+## Modeled gravity
 
 Since we cannot afford to measure gravity in every location, we use *modeled gravity*. For example, as noted in the datasheet for PID [EZ0704](https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=EZ0704):
 
@@ -49,9 +144,15 @@ EZ0704.The modeled gravity was interpolated from observed gravity values.
 
 ## Survey marks and model gravity
 
-@fig-counties-gravity shows the general trend: gravity is associated with elevation. As you move to the northwest in these counties the elevation increases, and the gravity decreases.
+@fig-counties-gravity shows a general trend: in these four counties, gravity increases as you move to the northwest. This is somewhat counter-intuitive, since elevation is increasing (and thus gravity should be decreasing, all else being equal).
 
-***TODO: Double-check this: color and legend seem backwards?***
+But of course all else is not equal. There are a number of dynamics at work here:^[The numbers in this section are from the Dictionary of Terms webpage National Centers of Environmental Information, NOAA. Retrieved 2024-02-27.  <https://www.ngdc.noaa.gov/mgg/gravity/1999/document/supplmnt/dctnary/98terms.html>]
+
+1. As elevation increases, gravity decreases at a rate of about 0.5 mGal every 10 ft.
+1. The radius of the earth is largest at the equator due to the buldge caused by the rotation of the earth. The radius at the poles is the smallest. Thus gravity is weakest at the equator (at constant elevation), and as you move north, gravity increases. At latitude 37 (just north of the NC border with Virginia) gravity increases at a rate of about 1.5 mGal/min. One minute is about 1.2 miles (6,300 ft or 1.9 km).
+1. Differences in the density of the upper mantle, crust, and amount of water in the rocks affect local gravity. The three techniques used to model local gravity (@fig-bgi-isosgtatic-bouguer-freeair) all show a gravity anomalies in thr range of about 85 mGal. This is about the range we see in @fig-counties-gravity, suggesting that the "modeled gravity" reported in the datasheets is drawing from a model like WGM2012. The data sheet notes that "The modeled gravity was interpolated from observed gravity values." WGM2012 and any other useful model would use observed gravity to ground it as well, right?
+
+State-wide, the highest magnitude local gravity anomalies are in a band that includes Orange and Durham, the two north-most counties of our four counties (@fig-bgi-bouguer-state, @fig-bgi-isosgtatic-bouguer-freeair) which also have the strongest gravity (@fig-gravity-comparisons-theoretical). The shape of the gradient seems to follow the fall line, suggesting to me that there is more denser rock in the crust of the Piedmont than in the transition to largely sedimentary rock to the southeast. In other words, (3) seems to be overpowering (1) and (2) in these counties. I assume the full answer is not that simple.
 
 ```{r fig.height=8, fig.width=12}
 #| label: fig-counties-gravity
@@ -90,40 +191,13 @@ ggplot() +
 
 <br>
 
-```{r}
-#| label: define-gravity-elevation-data
-
-r_e_m = 6371.009 * 1000 # radius of earth in meters
-# g_alt = 9.80665 * (r_e_m / (r_e_m + 500))^2
-# g_alt_mGal = g_alt / .00001
-
-data_for_plot_gravity <- nc_marks_counties |>
-  select(ortho_ht, model_grav, county) |>
-  mutate(gravity_theoretical = 9.80665 * (r_e_m / (r_e_m + ortho_ht))^2 / 0.00001,
-         gravity_delta = model_grav - gravity_theoretical,
-         gravity_pct_delta = model_grav / gravity_theoretical)
-
-dta_gravity_theoretical_line <- data_for_plot_gravity |>
-  filter(ortho_ht > 0) |>
-  filter(ortho_ht == max(ortho_ht, na.rm = TRUE) | ortho_ht == min(ortho_ht, na.rm = TRUE)) |>
-  distinct(ortho_ht, .keep_all = TRUE) |>
-  rename(model_grav_orig = model_grav,
-         model_grav = gravity_theoretical) # to simplify plotting them together
-
-```
-
-@fig-gravity-height-histogram shows there is not a 1:1 correspondence between model_grav and ortho_ht. The pattern in panel B somewhat matches the left half of panel A. But why are there two extra sections in panel A with higher gravity?
+@fig-gravity-height-histogram shows there is not a 1:1 correspondence between model_grav and ortho_ht. The shape of panel B somewhat matches the shape of the left half of panel A. But why are there two extra sections in panel A with higher gravity?
 
 ```{r fig.height=6, fig.width=8}
 #| label: fig-gravity-height-histogram
 #| fig-cap: "Model gravity and ortho_ht histograms"
 #| fig-height: 6
 #| fig-width: 8
-
-# data_for_plot_gravity |> 
-  # pivot_longer(cols = c(ortho_ht, model_grav),
-  #              names_to = "metric",
-  #              values_to = "value") |>
 
 p1 <- data_for_plot_gravity |>
   ggplot() +
@@ -164,9 +238,11 @@ p1 + p2 +
 
 ## Local gravity makes things interesting
 
-The two extra "bumps" in @fig-gravity-height-histogram correspond to the top two teal blue horizontal "arms" in @fig-gravity-comparisons-theoretical (the second large arm in red is hidden in the main shape of @fig-gravity-height-histogram panel A). I assume the "arms" are the result of differing density in the ground in Orange and Chatham counties (more specifically: differing density gradients, since in these "arms" as elevation increases, the gravity stays approximately constant. In other words, the geology of these two pairs of counties includes similar gradients in density at differing mean elevations. This could happen in both cases, for example, if less dense sedimentary rock covers denser bedrock, and as you move in the direction of higher elevation the amount of sedimentary rock underneath you declines.
+The two extra "bumps" in @fig-gravity-height-histogram panel A correspond to the top two teal-blue horizontal "arms" in @fig-gravity-comparisons-theoretical (the second large arm in red is hidden in the main shape of @fig-gravity-height-histogram panel A). I assume the "arms" are the result of differing density in the ground in Orange and Chatham counties (more specifically: differing density gradients, since in these "arms" as elevation increases, the gravity stays approximately constant. In other words, the geology of these two pairs of counties includes similar gradients in density at different mean elevations.
 
-The red line is theoretical gravity using the simple formula @eq-gravity presented at the beginning of this chapter. The theoretical gravity is so much higher (approx. 800-900 mGal) than the model gravity, probably because NGS's calculation of model gravity is much more sophisticated^[<https://www.ngs.noaa.gov/TOOLS/Gravity/grav_method.html> ] in pursuit of greater accuracy.
+The red line is the result of using average gravity in the simple formula @eq-gravity presented at the beginning of this chapter. The results are too high by about 800 mGal than the model gravity, which reflect the adjustment of latitude in @eq-welmec, which is the blue line.
+
+See also the method used by the NGS which is more sophisticated in pursuit of greater accuracy^[<https://www.ngs.noaa.gov/TOOLS/Gravity/grav_method.html> ], including some values being "interpolated from observed gravity values".
 
 ```{r, fig.height=6, fig.width=8}
 #| label: fig-gravity-comparisons-theoretical
@@ -175,21 +251,24 @@ The red line is theoretical gravity using the simple formula @eq-gravity present
 #| fig-width: 8
 
 ggplot() +
-  geom_line(data = dta_gravity_theoretical_line,
+  geom_line(data = dta_gravity_theoretical_simple,
             aes(x = ortho_ht, y = model_grav - 800),
           color = "firebrick", linewidth = 0.25) +
+  geom_line(data = dta_gravity_theoretical_welmec_mgal,
+            aes(x = ortho_ht, y = model_grav),
+          color = "blue", linewidth = 0.25) +
   geom_point(data = data_for_plot_gravity,
              aes(ortho_ht, model_grav, color = county),
              size = 0.5, alpha = 0.6,
              na.rm = TRUE) +
-  scale_x_reverse() +
   guides(color = guide_legend(override.aes = c(size = 3))) +
   labs(
     title = "Gravity comparisons - county differences",
-    subtitle = glue("Red line indicates theoretical gravity - 800 mGal", 
-                    ", which puts it on the same scale as model gravity for this plot",
+    subtitle = glue("Blue line is WELMEC formula",
+                    "; red line is simple gravity formula - 800 mGal", 
+                    "\nwhich puts it on the same scale as model gravity for this plot",
                     "\northo_ht in m; model_grav in mGal"),
-    x = "Ortho height (scale reversed)",
+    x = "Ortho height",
     y = "model_grav",
     caption = my_caption
   )
@@ -198,35 +277,18 @@ ggplot() +
 
 <br>
 
-Surface geology is visible in the [Geologic Map of North Carolina](https://experience.arcgis.com/experience/52e7e472f21444e794d6ef02a9b02121/) published by the Department of Environmental Quality - Geological Survey. An important note accompanying the map:
-
-> What is this Viewer? 
-> 
-> GIS data set version of the Geologic Map of North Carolina 1985. The data represents the digital equivalent of the official State Geology map (1:500,000- scale), but was digitized from (1:250,000-scale) base maps. There is one additional data set which accompany this layer, dikes.
-> 
-> This geology is considered deprecated (not recommended for use) by the NC Geological Survey. There is currently no replacement for it that covers the whole state. We are working on a replacement that will be made available to the public in the near future (2024). This new dataset will be in the United States Geological Survey (USGS) Geologic Map Schema (GeMS). When first released this data set will only cover a portion of the State at a scale of 1:100,000. This dataset will be dynamic and expand to cover the whole state by as early as 2030 at which point this layer will be removed from service.
-
-And unfortunately I haven't found away to mask the map to the four county boundaries, add a legend explaining the colors and patterns, or download shapefiles so I could do this myself. So to accompany the interactive map (see above link), I offer this screen capture of the area including our four counties of interest:
-
-```{r}
-#| label: fig-geologic-map
-#| fig-cap: "Geologic map of selected counties in North Carolina<br> Source: NC Department of Environmental Quality - Geological Survey <https://experience.arcgis.com/experience/52e7e472f21444e794d6ef02a9b02121/>"
-#| out-width: "90%"
-  
-knitr::include_graphics(here("images/near-home-geologic-map-of-nc-DEQ-geological-survey.jpg"))
-
-```
-
-<br>
+Local geology is visible in the [Geologic Map of North Carolina](https://data-ncdenr.opendata.arcgis.com/apps/0a7ccd9394734ff6aa2434d2528ddf12/explore) "The Terranes and Major Geologic Elements of North Carolina" published by the NC Department of Environmental Quality - Geological Survey. 
 
 ```{r}
 #| label: fig-geologic-map2
-#| fig-cap: "Geology of selected counties in North Carolina<br> Source: NC Department of Environmental Quality - Geological Survey: 'Geology of North Carolina' story map <https://data-ncdenr.opendata.arcgis.com/apps/0a7ccd9394734ff6aa2434d2528ddf12/explore>"
+#| fig-cap: "Geology of selected counties in North Carolina<br> Source: NC Department of Environmental Quality - Geological Survey: 'Geology of North Carolina: The Terranes and Major Geologic Elements of North Carolina' story map <https://data-ncdenr.opendata.arcgis.com/apps/0a7ccd9394734ff6aa2434d2528ddf12/explore>"
 #| out-width: "90%"
   
 knitr::include_graphics(here("images/geology-of-nc.jpg"))
 
 ```
+
+<br>
 
 Legend (text copied from map):
 
@@ -253,9 +315,7 @@ Legend (text copied from map):
 
 ## Gravity anomaly maps
 
-<https://mrdata.usgs.gov/gravity/map-us.html#home>
-
-<https://mrdata.usgs.gov/metadata/usgraviso.faq.html>
+See  <https://mrdata.usgs.gov/gravity/map-us.html#home> and <https://mrdata.usgs.gov/metadata/usgraviso.faq.html>.
 
 ```{r}
 #| label: fig-gravity-anomaly-isostatic
@@ -268,7 +328,7 @@ knitr::include_graphics(here("images/gravity-anomaly-isostatic.jpg"))
 
 <br>
 
-<https://mrdata.usgs.gov/metadata/usgravboug.faq.html>
+See <https://mrdata.usgs.gov/metadata/usgravboug.faq.html>.
 
 ```{r}
 #| label: fig-gravity-anomaly-bouguer
@@ -381,15 +441,15 @@ free_air_nc_counties <- st_intersection(free_air,
 
 ```
 
-```{r fig.height=8, fig.width=12}
-#| label: fig-bgi-bouguer
-#| fig-cap: "Gravity anomaly (Bouguer) from WGM2012 global model"
+```{r fig.height=8, fig.width=15}
+#| label: fig-bgi-bouguer-state
+#| fig-cap: "NC state-wide gravity anomaly (Bouguer) from WGM2012 global model"
 #| fig-height: 8
-#| fig-width: 12
+#| fig-width: 15
 #| column: screen-right
 #| warning: false
 #| message: false
-#| eval: false
+#| eval: true
 
 
 # WGM2012_20240225024751.zip downloaded from https://bgi.obs-mip.fr/data-products/outils/wgm2012-maps-visualizationextraction/
@@ -403,15 +463,41 @@ bouguer <- st_as_sf(xx,
                     crs = "WGS84") |>
   st_transform(prj)
 
-# bouguer_nc_state <- st_intersection(bouguer,
-#                                     st_union(nc_counties_all_tigris))
-# 
-# ggplot(bouguer_nc_state) +
-#   geom_sf(aes(color = mgal),
-#           alpha = 0.3) +
-#   geom_sf(data = nc_counties_all_tigris,
-#           color = "black",
-#           fill = NA)
+bouguer_nc_state <- st_intersection(bouguer,
+                                    st_union(nc_counties_all_tigris))
+
+ggplot(bouguer_nc_state) +
+  geom_sf(aes(color = mgal),
+          size = 0.75,
+          alpha = 0.3) +
+  geom_sf(data = nc_counties_all_tigris,
+          color = "black",
+          fill = NA) +
+  scale_color_viridis_c(end = 0.9) +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = c(0.95, 0.2)
+        ) +
+  labs(
+    title = "NC state-wide gravity anomaly (Bouguer)",
+    subtitle = 'Extract from WGM2012 global model (2" x 2" grid)',
+    caption = "Daniel Moul. Data: Bureau Gravimétrique International (BGI) / International Association of Geodesy",
+    x = NULL,
+    y = NULL,
+    color = "mGal",
+  )
+
+```
+
+```{r fig.height=8, fig.width=12}
+#| label: fig-bgi-bouguer
+#| fig-cap: "Gravity anomaly (Bouguer) from WGM2012 global model"
+#| fig-height: 8
+#| fig-width: 12
+#| column: screen-right
+#| warning: false
+#| message: false
+#| eval: false
 
 bouguer_nc_counties <- st_intersection(bouguer, 
                                        st_buffer(nc_counties_border_union,
@@ -504,7 +590,7 @@ isostatic_nc_counties <- st_intersection(isostatic,
 <br>
 
 ```{r fig.height=6, fig.width=15}
-#| label: fig-bgi-isosgtatic-and-bouguer
+#| label: fig-bgi-isosgtatic-bouguer-freeair
 #| fig-cap: "Gravity anomaly (isostatic and Bouguer) from WGM2012 global model"
 #| fig-height: 6
 #| fig-width: 15

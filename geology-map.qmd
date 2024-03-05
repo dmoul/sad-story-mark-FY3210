@@ -9,6 +9,10 @@ source(here("scripts/setup-data-prep.R"))
 
 ```
 
+::: {.callout-note}
+This chapter is experimental
+:::
+
 ```{r}
 sf_use_s2(FALSE)
 
@@ -380,3 +384,31 @@ xx |>
   )
 
 ```
+
+<br>
+
+Surface geology is visible in the [Geologic Map of North Carolina](https://experience.arcgis.com/experience/52e7e472f21444e794d6ef02a9b02121/) published by the Department of Environmental Quality - Geological Survey. An important note accompanying the map:
+
+> What is this Viewer? 
+> 
+> GIS data set version of the Geologic Map of North Carolina 1985. The data represents the digital equivalent of the official State Geology map (1:500,000- scale), but was digitized from (1:250,000-scale) base maps. There is one additional data set which accompany this layer, dikes.
+> 
+> This geology is considered deprecated (not recommended for use) by the NC Geological Survey. There is currently no replacement for it that covers the whole state. We are working on a replacement that will be made available to the public in the near future (2024). This new dataset will be in the United States Geological Survey (USGS) Geologic Map Schema (GeMS). When first released this data set will only cover a portion of the State at a scale of 1:100,000. This dataset will be dynamic and expand to cover the whole state by as early as 2030 at which point this layer will be removed from service.
+
+I offer this screen capture of the area including our four counties of interest:
+
+```{r}
+#| label: fig-geologic-map
+#| fig-cap: "Geologic map of selected counties in North Carolina<br> Source: NC Department of Environmental Quality - Geological Survey <https://experience.arcgis.com/experience/52e7e472f21444e794d6ef02a9b02121/>"
+#| out-width: "90%"
+  
+knitr::include_graphics(here("images/near-home-geologic-map-of-nc-DEQ-geological-survey.jpg"))
+
+```
+
+<br>
+
+
+
+
+<br>
