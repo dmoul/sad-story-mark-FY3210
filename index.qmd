@@ -36,8 +36,6 @@ knitr::include_graphics(here("images/journal-of-g-washington-1754.jpg"))
   
 knitr::include_graphics(here("images/Detail-from-Jefferson-map-300dpi.png"))
 
-#knitr::include_graphics(here("images/journal-of-g-washington-1754.jpg"))
-
 ```
 
 <br>

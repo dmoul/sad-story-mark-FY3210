@@ -4,7 +4,7 @@ project:
 book:
   title: "The sad story of mark FY3210"
   author: Daniel Moul
-  date: now
+  date: "February 27, 2024"
   page-footer: 
     center: "Copyright 2024 by [Daniel Moul](https://dmoul.github.io). License: [CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/)"
     background: dark
@@ -15,9 +15,9 @@ book:
     - "introducing-mark-FY3210.qmd"
     - "in-context.qmd"
     - "placement-and-recovery.qmd"
+    - "mysteries.qmd"
     - "gravity-elevation.qmd"
-    - "geology-map.qmd"
-    - "gravity-elevation.qmd"
+    # n- "geology-map.qmd"
     - "facts-pointers.qmd"
 
 #bibliography: references.bib

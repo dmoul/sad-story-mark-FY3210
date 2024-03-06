@@ -11,11 +11,8 @@ options(scipen = 9)
 
 ```
 
-::: {.callout-note}
-This chapter is experimental
-:::
+Since some of the datasheets include modeled gravity, let's dig into this topic.
 
-Since the datasheets include modeled gravity, let's see what we can learn.
 
 ## Introduction: Gravity and elevation
 
@@ -30,12 +27,12 @@ $$
 g_{altitude} = g(\frac{r_e}{r_e + h})^2
 $$ {#eq-gravity}
 
-where radius of the earth $r_e = 6371.009\ km$ and acceleration due to gravity at sea level is $9.80665\ m/s^2$ ^[<https://www.vcalc.com/wiki/KurtHeckman/Gravity+Acceleration+by+Altitude> ]. *Altitude* is another name for *elevation* and is measured relative to a specific vertical [datum](https://en.wikipedia.org/wiki/Geodetic_datum). In the case of US survey marks, the datum used here is the North American vertical datum of 1988 (NAVD 88).
+where radius of the earth $r_e = 6371.009\ km$ and average acceleration due to gravity at sea level is $9.80665\ m/s^2$ ^[<https://www.vcalc.com/wiki/KurtHeckman/Gravity+Acceleration+by+Altitude> ]. *Elevation* and is measured relative to a specific vertical [datum](https://en.wikipedia.org/wiki/Geodetic_datum). In the case of US survey marks, the datum used here is the North American vertical datum of 1988 (NAVD 88).
 
 
 ### Less simple explanation
 
-A less simple model takes into account the earth's spining causing a larger radius at the equator than at the poles. As noted at <https://en.wikipedia.org/wiki/Theoretical_gravity#Basic_formulas> :
+A less simple model takes into account the earth's spinning, which causes a larger radius at the equator than at the poles and thus lower gravity at the equator. Thus gravity varies as a function of latitude. As noted at <https://en.wikipedia.org/wiki/Theoretical_gravity#Basic_formulas> :
 
 > WELMEC formula: In all German standards offices the free-fall acceleration g is calculated in respect to the average latitude $lat$ and the average height above sea level $h$ with the WELMEC–Formel:
 > 
@@ -119,10 +116,13 @@ p1 + p2 +
   
 ```
 
+<br>
+
+Note that the US NGS uses another method to model gravity, which in pursuit of greater accuracy^[<https://www.ngs.noaa.gov/TOOLS/Gravity/grav_method.html> ] includes some values being "interpolated from observed gravity values".
 
 ## Modeled gravity
 
-Since we cannot afford to measure gravity in every location, we use *modeled gravity*. For example, as noted in the datasheet for PID [EZ0704](https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=EZ0704):
+Since the NGS cannot afford to measure gravity in every location, they use *modeled gravity*. For example, as noted in the datasheet for PID [EZ0704](https://www.ngs.noaa.gov/cgi-bin/ds_mark.prl?PidBox=EZ0704):
 
 ```
 EZ0704                         *CURRENT SURVEY CONTROL
@@ -142,6 +142,8 @@ EZ0704
 EZ0704.The modeled gravity was interpolated from observed gravity values.
 ```
 
+<br>
+
 ## Survey marks and model gravity
 
 @fig-counties-gravity shows a general trend: in these four counties, gravity increases as you move to the northwest. This is somewhat counter-intuitive, since elevation is increasing (and thus gravity should be decreasing, all else being equal).
@@ -152,7 +154,7 @@ But of course all else is not equal. There are a number of dynamics at work here
 1. The radius of the earth is largest at the equator due to the buldge caused by the rotation of the earth. The radius at the poles is the smallest. Thus gravity is weakest at the equator (at constant elevation), and as you move north, gravity increases. At latitude 37 (just north of the NC border with Virginia) gravity increases at a rate of about 1.5 mGal/min. One minute is about 1.2 miles (6,300 ft or 1.9 km).
 1. Differences in the density of the upper mantle, crust, and amount of water in the rocks affect local gravity. The three techniques used to model local gravity (@fig-bgi-isosgtatic-bouguer-freeair) all show a gravity anomalies in thr range of about 85 mGal. This is about the range we see in @fig-counties-gravity, suggesting that the "modeled gravity" reported in the datasheets is drawing from a model like WGM2012. The data sheet notes that "The modeled gravity was interpolated from observed gravity values." WGM2012 and any other useful model would use observed gravity to ground it as well, right?
 
-State-wide, the highest magnitude local gravity anomalies are in a band that includes Orange and Durham, the two north-most counties of our four counties (@fig-bgi-bouguer-state, @fig-bgi-isosgtatic-bouguer-freeair) which also have the strongest gravity (@fig-gravity-comparisons-theoretical). The shape of the gradient seems to follow the fall line, suggesting to me that there is more denser rock in the crust of the Piedmont than in the transition to largely sedimentary rock to the southeast. In other words, (3) seems to be overpowering (1) and (2) in these counties. I assume the full answer is not that simple.
+State-wide, the highest magnitude local gravity anomalies^[<https://en.wikipedia.org/wiki/Gravity_anomaly> ] are in a band that includes Orange and Durham, the two north-most counties of our four counties (@fig-bgi-bouguer-state, @fig-bgi-isosgtatic-bouguer-freeair) which also have the strongest gravity (@fig-gravity-comparisons-theoretical). The shape of the gradient seems to follow the fall line, suggesting to me that there is more denser rock in the crust of the Piedmont than in the transition to largely sedimentary rock to the southeast. In other words, (3) seems to be overpowering (1) and (2) in these counties. I assume the full answer is not that simple.
 
 ```{r fig.height=8, fig.width=12}
 #| label: fig-counties-gravity
@@ -238,11 +240,9 @@ p1 + p2 +
 
 ## Local gravity makes things interesting
 
-The two extra "bumps" in @fig-gravity-height-histogram panel A correspond to the top two teal-blue horizontal "arms" in @fig-gravity-comparisons-theoretical (the second large arm in red is hidden in the main shape of @fig-gravity-height-histogram panel A). I assume the "arms" are the result of differing density in the ground in Orange and Chatham counties (more specifically: differing density gradients, since in these "arms" as elevation increases, the gravity stays approximately constant. In other words, the geology of these two pairs of counties includes similar gradients in density at different mean elevations.
+The two extra "bumps" in @fig-gravity-height-histogram panel A correspond to the top two teal-blue horizontal "arms" in @fig-gravity-comparisons-theoretical (the second large arm in red is hidden in the main shape of @fig-gravity-height-histogram panel A). I assume the "arms" are the result of differing density in the ground in Orange and Chatham counties (or more specifically: differing density gradients or density contrasts^[<https://pburnley.faculty.unlv.edu/GEOL452_652/gravity/notes/GravityNotes07SimpleModel.htm> ], since in these "arms" the gravity stays approximately constant while elevation increases. In other words, the geology of these two pairs of counties includes similar gradients in density at different mean elevations.
 
-The red line is the result of using average gravity in the simple formula @eq-gravity presented at the beginning of this chapter. The results are too high by about 800 mGal than the model gravity, which reflect the adjustment of latitude in @eq-welmec, which is the blue line.
-
-See also the method used by the NGS which is more sophisticated in pursuit of greater accuracy^[<https://www.ngs.noaa.gov/TOOLS/Gravity/grav_method.html> ], including some values being "interpolated from observed gravity values".
+The red line is the result of using average gravity in the simple formula @eq-gravity presented at the beginning of this chapter. The results are too high by about 800 mGal compared to the NGS model and the WELMEC model (@eq-welmec) which include the adjustment of latitude; the latter is the blue line.
 
 ```{r, fig.height=6, fig.width=8}
 #| label: fig-gravity-comparisons-theoretical
@@ -277,7 +277,7 @@ ggplot() +
 
 <br>
 
-Local geology is visible in the [Geologic Map of North Carolina](https://data-ncdenr.opendata.arcgis.com/apps/0a7ccd9394734ff6aa2434d2528ddf12/explore) "The Terranes and Major Geologic Elements of North Carolina" published by the NC Department of Environmental Quality - Geological Survey. 
+Local geology contributes to the the local variation in density and is shown in the [Geologic Map of North Carolina](https://data-ncdenr.opendata.arcgis.com/apps/0a7ccd9394734ff6aa2434d2528ddf12/explore) "The Terranes and Major Geologic Elements of North Carolina" published by the NC Department of Environmental Quality - Geological Survey. 
 
 ```{r}
 #| label: fig-geologic-map2
@@ -290,7 +290,7 @@ knitr::include_graphics(here("images/geology-of-nc.jpg"))
 
 <br>
 
-Legend (text copied from map):
+Legend (text copied from the map):
 
 * Blue: Carolina terrane: This terrane consists of heated and deformed volcanic and sedimentary rocks. The terrane contains rocks associated with a series of oceanic volcanic islands about 540-630 million years ago. The terrane is known for its numerous abandoned gold mines and prospects. North Carolina led the nation in gold production before the California Gold Rush of 1849. In recent decades, only minor gold mining has taken place, but mining companies continue to show interest in the area. Mineral production is crushed stone for road aggregate, light-weight aggregate and pyrophyllite for refractories, ceramics, fillers, paint and insecticide carriers.
 
@@ -312,134 +312,21 @@ Legend (text copied from map):
 
 <br>
 
+## Gravity anomalies
 
-## Gravity anomaly maps
+As is visible in @fig-gravity-comparisons-theoretical, local gravity is not fully described as a function of latitude (@fig-latitude-gravity). Gravity anomalies based on various models have been published. See for example <https://mrdata.usgs.gov/gravity/map-us.html#home> and <https://mrdata.usgs.gov/metadata/usgraviso.faq.html>.
 
-See  <https://mrdata.usgs.gov/gravity/map-us.html#home> and <https://mrdata.usgs.gov/metadata/usgraviso.faq.html>.
-
-```{r}
-#| label: fig-gravity-anomaly-isostatic
-#| fig-cap: "Gravity anomaly (isostatic) of selected counties in North Carolina<br> Source: NC Department of Environmental Quality - Geological Survey: 'Geology of North Carolina' story map <https://data-ncdenr.opendata.arcgis.com/apps/0a7ccd9394734ff6aa2434d2528ddf12/explore>"
-#| out-width: "90%"
-  
-knitr::include_graphics(here("images/gravity-anomaly-isostatic.jpg"))
-
-```
-
-<br>
-
-See <https://mrdata.usgs.gov/metadata/usgravboug.faq.html>.
-
-```{r}
-#| label: fig-gravity-anomaly-bouguer
-#| fig-cap: "Gravity anomaly (Bouguer) of selected counties in North Carolina<br> Source: NC Department of Environmental Quality - Geological Survey: 'Geology of North Carolina' story map <https://data-ncdenr.opendata.arcgis.com/apps/0a7ccd9394734ff6aa2434d2528ddf12/explore>"
-#| out-width: "90%"
-  
-knitr::include_graphics(here("images/gravity-anomaly-bouguer.jpg"))
-
-```
-
-<br>
-
-https://mrdata.usgs.gov/catalog/cite-view.php?cite=16 but link below is not accessible:
-
-ftp://ftpext.usgs.gov/pub/cr/co/denver/musette/pub/GEOPHYSICAL_DATA/cdrom_DDS-9/GRIDS/ARC_INFO/bouguer_sdd.e00.gz
-
-
-Now trying this: https://www.ngdc.noaa.gov/mgg/gravity/
-
-| From 1999 (so out of date):
-| https://www.ngdc.noaa.gov/mgg/gravity/1999/data/grids/dgrav/dgrav.txt
-| https://www.ngdc.noaa.gov/mgg/gravity/1999/data/grids/dgrav/dgrav.gif
-| https://www.ngdc.noaa.gov/mgg/gravity/1999/data/grids/dgrav/
-
-<br>
-
-Interesting gravity accuracy codes listed in https://www.ngdc.noaa.gov/mgg/gravity/1999/document/supplmnt/dctnary/98terms.html
-
-| Elevation accuracy (ft)
-| 40 ft = 2.0 mGal
-| 20 ft = 1.0 mGal
-| 10 ft = 0.5 mGal
-
-<br>
-
-| Latitude accuracy (min) (Lat. gravity effect based on mean value of 1.45 mGal/min at Latitude 37)
-| 1.4 min = 8,400 ft = 2.0 mGal
-| 0.70 min = 4,200 ft = 1.0 mGal
-| 0.35 min = 2,100 ft = 0.5 mGal
-
-
-https://bgi.obs-mip.fr/data-products/grids-and-models/wgm2012-global-model/
+Below I show the state-wide (@fig-bgi-bouguer-state Bouguer method) and four-county anomalies (@fig-bgi-isosgtatic-bouguer-freeair all three common methods) based on the WGM2012 model. I used WGM2012^[<https://bgi.obs-mip.fr/data-products/grids-and-models/wgm2012-global-model/> ] since the Bureau Gravimétrique International (BGI) makes regional data available for easy plotting:^[<https://bgi.obs-mip.fr/data-products/outils/wgm2012-maps-visualizationextraction/> ] 
 
 > WGM2012 is the first release of a high resolution grids and maps of the Earth’s gravity anomalies (Bouguer, isostatic and surface free-air), computed at global scale in spherical geometry. It has been realized by the Bureau Gravimétrique International (BGI) in the frame of collaborations with international organizations such as Commission for the Geological Map of the World (CGMW), UNESCO, International Association of Geodesy (IAG), International Union of Geodesy and Geophysics (IUGG), International Union of Geological Sciences (IUGS) and with various scientific institutions.
-
+> 
 > WGM2012 gravity anomalies are derived from the available Earth global gravity models EGM2008 and DTU10 and include 1’x1′ resolution terrain corrections derived from ETOPO1 model that consider the contribution of most surface masses (atmosphere, land, oceans, inland seas, lakes, ice caps and ice shelves). These products have been computed by means of a spherical harmonic approach using theoretical developments carried out to achieve accurate computations at global scale (Balmino, G., Vales, N., Bonvalot, S. and Briais, A., 2011. Spherical harmonic modeling to ultra-high degree of Bouguer and isostatic anomalies. Journal of Geodesy. DOI 10.1007/s00190-011-0533-4).
-
+> 
 > WGM2012 Reference / Authors
-
+> 
 > Bonvalot, S., Balmino, G., Briais, A., M. Kuhn, Peyrefitte, A., Vales N., Biancale, R., Gabalda, G., Reinquin, F., Sarrailh, M., 2012. World Gravity Map. Commission for the Geological Map of the World. Eds. BGI-CGMW-CNES-IRD, Paris. https://doi.org/10.18168/bgi.23
 
-
-Regional data extraction https://bgi.obs-mip.fr/data-products/outils/wgm2012-maps-visualizationextraction/
-
-```{r}
-#| label: define-bgi-gravity-data
-#| warning: false
-#| message: false
-
-# Brouguer
-# WGM2012_20240225024751.zip downloaded from https://bgi.obs-mip.fr/data-products/outils/wgm2012-maps-visualizationextraction/
-
-xx <- read_fwf(here("data/map/WGM2012_20240225025821/plot_bouguer_20240225025821.txt"),
-               skip = 5)
-colnames(xx) <- c("lon", "lat", "mgal")
-
-bouguer <- st_as_sf(xx,
-                    coords = c("lon", "lat"),
-                    crs = "WGS84") |>
-  st_transform(prj)
-
-bouguer_nc_counties <- st_intersection(bouguer, 
-                                       st_buffer(nc_counties_border_union,
-                                                 10000)
-)
-
-# Isostatic
-# WGM2012_20240225031912.zip downloaded from https://bgi.obs-mip.fr/data-products/outils/wgm2012-maps-visualizationextraction/
-
-xx <- read_fwf(here("data/map/WGM2012_20240225031912/plot_isostatic_20240225031912.txt"),
-               skip = 5)
-colnames(xx) <- c("lon", "lat", "mgal")
-
-isostatic <- st_as_sf(xx,
-                    coords = c("lon", "lat"),
-                    crs = "WGS84") |>
-  st_transform(prj)
-
-isostatic_nc_counties <- st_intersection(isostatic, 
-                                         st_buffer(nc_counties_border_union,
-                                                   10000)
-)
-
-# Free air
-# WGM2012_20240225040612.zip downloaded from https://bgi.obs-mip.fr/data-products/outils/wgm2012-maps-visualizationextraction/
-
-xx <- read_fwf(here("data/map/WGM2012_20240225040612/plot_freeair_20240225040612.txt"),
-               skip = 5)
-colnames(xx) <- c("lon", "lat", "mgal")
-
-free_air <- st_as_sf(xx,
-                    coords = c("lon", "lat"),
-                    crs = "WGS84") |>
-  st_transform(prj)
-
-free_air_nc_counties <- st_intersection(free_air, 
-                                         st_buffer(nc_counties_border_union,
-                                                   10000)
-)
-
-```
+<br>
 
 ```{r fig.height=8, fig.width=15}
 #| label: fig-bgi-bouguer-state
@@ -451,25 +338,10 @@ free_air_nc_counties <- st_intersection(free_air,
 #| message: false
 #| eval: true
 
-
-# WGM2012_20240225024751.zip downloaded from https://bgi.obs-mip.fr/data-products/outils/wgm2012-maps-visualizationextraction/
-
-xx <- read_fwf(here("data/map/WGM2012_20240225025821/plot_bouguer_20240225025821.txt"),
-               skip = 5)
-colnames(xx) <- c("lon", "lat", "mgal")
-
-bouguer <- st_as_sf(xx,
-                    coords = c("lon", "lat"),
-                    crs = "WGS84") |>
-  st_transform(prj)
-
-bouguer_nc_state <- st_intersection(bouguer,
-                                    st_union(nc_counties_all_tigris))
-
 ggplot(bouguer_nc_state) +
   geom_sf(aes(color = mgal),
-          size = 0.75,
-          alpha = 0.3) +
+          shape = 15, size = 1.25,
+          alpha = 0.6) +
   geom_sf(data = nc_counties_all_tigris,
           color = "black",
           fill = NA) +
@@ -489,104 +361,6 @@ ggplot(bouguer_nc_state) +
 
 ```
 
-```{r fig.height=8, fig.width=12}
-#| label: fig-bgi-bouguer
-#| fig-cap: "Gravity anomaly (Bouguer) from WGM2012 global model"
-#| fig-height: 8
-#| fig-width: 12
-#| column: screen-right
-#| warning: false
-#| message: false
-#| eval: false
-
-bouguer_nc_counties <- st_intersection(bouguer, 
-                                       st_buffer(nc_counties_border_union,
-                                                 10000)
-)
-
-ggplot(bouguer_nc_counties) +
-  geom_sf(aes(color = mgal),
-          alpha = 0.4) +
-  geom_sf(data = nc_counties,
-          color = "black",
-          fill = NA) +
-  scale_color_viridis_c(end = 0.9) +
-  theme(axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        legend.position = c(0.95, 0.8)
-        ) +
-  labs(
-    title = "Gravity anomaly (Bouguer)",
-    subtitle = 'Extract from WGM2012 global model (2" x 2" grid)',
-    caption = "Daniel Moul. Data: Bureau Gravimétrique International (BGI) / International Association of Geodesy",
-    x = NULL,
-    y = NULL,
-    color = "mGal",
-  )
-
-```
-
-```{r fig.height=8, fig.width=12}
-#| label: fig-bgi-isosgtatic
-#| fig-cap: "Gravity anomaly (isostatic) from WGM2012 global model"
-#| fig-height: 8
-#| fig-width: 12
-#| column: screen-right
-#| warning: false
-#| message: false
-#| eval: false
-
-# Isostatic
-
-# WGM2012_20240225031912.zip downloaded from https://bgi.obs-mip.fr/data-products/outils/wgm2012-maps-visualizationextraction/
-
-xx <- read_fwf(here("data/map/WGM2012_20240225031912/plot_isostatic_20240225031912.txt"),
-               skip = 5)
-colnames(xx) <- c("lon", "lat", "mgal")
-
-isostatic <- st_as_sf(xx,
-                    coords = c("lon", "lat"),
-                    crs = "WGS84") |>
-  st_transform(prj)
-
-# isostatic_nc_state <- st_intersection(isostatic,
-#                                       st_union(nc_counties_all_tigris)
-# )
-# 
-# ggplot(isostatic_nc_state) +
-#   geom_sf(aes(color = mgal),
-#           alpha = 0.3) +
-#   geom_sf(data = nc_counties_all_tigris,
-#           color = "black",
-#           fill = NA)
-
-isostatic_nc_counties <- st_intersection(isostatic, 
-                                         st_buffer(nc_counties_border_union,
-                                                   10000)
-)
-
-# ggplot(isostatic_nc_counties) +
-#   geom_sf(aes(color = mgal),
-#           alpha = 0.4) +
-#   geom_sf(data = nc_counties,
-#           color = "black",
-#           fill = NA) +
-#   scale_color_viridis_c(end = 0.9) +
-#   theme(axis.text = element_blank(),
-#         axis.ticks = element_blank(),
-#         legend.position = c(0.95, 0.8)
-#         ) +
-#   labs(
-#     title = "Gravity anomaly (isostatic)",
-#     subtitle = 'Extract from WGM2012 global model (2" x 2" grid)',
-#     caption = "Daniel Moul. Data: Bureau Gravimétrique International (BGI) / International Association of Geodesy",
-#     x = NULL,
-#     y = NULL,
-#     color = "mGal",
-#   )
-
-```
-
 <br>
 
 ```{r fig.height=6, fig.width=15}
@@ -600,7 +374,8 @@ isostatic_nc_counties <- st_intersection(isostatic,
 
 p1 <- ggplot(isostatic_nc_counties) +
   geom_sf(aes(color = mgal),
-          alpha = 0.4) +
+          shape = 15, size = 2.5,
+          alpha = 0.6) +
   geom_sf(data = nc_counties,
           color = "black",
           fill = NA) +
@@ -615,7 +390,8 @@ p1 <- ggplot(isostatic_nc_counties) +
 
 p2 <- ggplot(bouguer_nc_counties) +
   geom_sf(aes(color = mgal),
-          alpha = 0.4) +
+          shape = 15, size = 2.5,
+          alpha = 0.6) +
   geom_sf(data = nc_counties,
           color = "black",
           fill = NA) +
@@ -630,7 +406,9 @@ p2 <- ggplot(bouguer_nc_counties) +
 
 p3 <-ggplot(free_air_nc_counties) +
   geom_sf(aes(color = mgal),
-          alpha = 0.4) +
+          shape = 15, size = 2.5,
+          alpha = 0.6
+          ) +
   geom_sf(data = nc_counties,
           color = "black",
           fill = NA) +
@@ -653,15 +431,3 @@ p1 + p2 + p3 +
 ```
 
 <br>
-
-TODO: Update local gravity "theoretical gravity"
-
-https://www.isobudgets.com/how-to-calculate-local-gravity/
-
-https://en.wikipedia.org/wiki/Gravity_anomaly
-
-https://pburnley.faculty.unlv.edu/GEOL452_652/gravity/notes/GravityNotes29SeparationStrategy.htm separating local and regional
-
-https://en.wikipedia.org/wiki/Free-air_gravity_anomaly
-
-

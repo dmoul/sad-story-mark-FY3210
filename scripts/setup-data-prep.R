@@ -287,3 +287,61 @@ dta_gravity_theoretical_welmec <- data_for_plot_gravity |>
 
 dta_gravity_theoretical_welmec_mgal <- dta_gravity_theoretical_welmec |>
   mutate(model_grav = model_grav / 1.0e-5)
+
+
+###### gravity anomaly models
+
+# Brouguer
+# WGM2012_20240225024751.zip downloaded from https://bgi.obs-mip.fr/data-products/outils/wgm2012-maps-visualizationextraction/
+
+grav_tmp <- read_fwf(here("data/map/WGM2012_20240225025821/plot_bouguer_20240225025821.txt"),
+                     skip = 5)
+colnames(grav_tmp) <- c("lon", "lat", "mgal")
+
+bouguer <- st_as_sf(grav_tmp,
+                    coords = c("lon", "lat"),
+                    crs = "WGS84") |>
+  st_transform(prj)
+
+bouguer_nc_state <- st_intersection(bouguer,
+                                    st_union(nc_counties_all_tigris))
+
+bouguer_nc_counties <- st_intersection(bouguer, 
+                                       st_buffer(nc_counties_border_union,
+                                                 10000)
+)
+
+# Isostatic
+# WGM2012_20240225031912.zip downloaded from https://bgi.obs-mip.fr/data-products/outils/wgm2012-maps-visualizationextraction/
+
+grav_tmp <- read_fwf(here("data/map/WGM2012_20240225031912/plot_isostatic_20240225031912.txt"),
+                     skip = 5)
+colnames(grav_tmp) <- c("lon", "lat", "mgal")
+
+isostatic <- st_as_sf(grav_tmp,
+                      coords = c("lon", "lat"),
+                      crs = "WGS84") |>
+  st_transform(prj)
+
+isostatic_nc_counties <- st_intersection(isostatic, 
+                                         st_buffer(nc_counties_border_union,
+                                                   10000)
+)
+
+# Free air
+# WGM2012_20240225040612.zip downloaded from https://bgi.obs-mip.fr/data-products/outils/wgm2012-maps-visualizationextraction/
+
+grav_tmp <- read_fwf(here("data/map/WGM2012_20240225040612/plot_freeair_20240225040612.txt"),
+                     skip = 5)
+colnames(grav_tmp) <- c("lon", "lat", "mgal")
+
+free_air <- st_as_sf(grav_tmp,
+                     coords = c("lon", "lat"),
+                     crs = "WGS84") |>
+  st_transform(prj)
+
+free_air_nc_counties <- st_intersection(free_air, 
+                                        st_buffer(nc_counties_border_union,
+                                                  10000)
+)
+
